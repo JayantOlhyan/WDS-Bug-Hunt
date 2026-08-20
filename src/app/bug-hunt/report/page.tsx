@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/Card';
 import { TerminalButton } from '@/components/TerminalButton';
-import { Loader2, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Loader2, CheckCircle, AlertTriangle, ArrowRight, Link as LinkIcon } from 'lucide-react';
 
 export default function BugReportForm() {
   const router = useRouter();
@@ -218,6 +218,14 @@ export default function BugReportForm() {
         <div className="space-y-1">
           <p className="font-bold uppercase tracking-widest">Prerequisite Task</p>
           <p className="text-cyber-subtext">You must be added to the official WDS WhatsApp group for further interviews. Make sure you have joined before submitting your report.</p>
+        </div>
+      </div>
+
+      <div className="border border-cyber-border bg-cyber-darkborder/20 p-4 font-mono text-xs flex items-start sm:items-center space-x-3 text-cyber-text shadow-cyber-glow">
+        <LinkIcon className="h-5 w-5 flex-shrink-0 text-cyber-yellow mt-0.5 sm:mt-0" />
+        <div className="space-y-1 w-full">
+          <p className="font-bold uppercase tracking-widest text-cyber-yellow">Target Website</p>
+          <p className="text-cyber-subtext">Find bugs here: <a href="https://msit-website.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-cyber-text hover:text-cyber-yellow transition-colors break-all underline underline-offset-2">https://msit-website.netlify.app/</a></p>
         </div>
       </div>
 

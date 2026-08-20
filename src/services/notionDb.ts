@@ -64,7 +64,6 @@ export const notionDb = {
       'Report ID': { rich_text: [{ text: { content: formattedId } }] },
       'Student': { title: [{ text: { content: bug.studentName } }] },
       'Avatar Emoji': { rich_text: [{ text: { content: bug.avatarEmoji || '👾' } }] },
-      'Avatar Emoji': { rich_text: [{ text: { content: bug.avatarEmoji || '👾' } }] },
       'Mobile Number': { rich_text: [{ text: { content: bug.studentMobile } }] },
       'Branch': { select: { name: bug.branch } },
       'Section': { select: { name: bug.section } },
@@ -228,7 +227,6 @@ export const notionDb = {
       const properties: any = {
         'Name': { title: [{ text: { content: studentData.name } }] },
         'Avatar Emoji': { rich_text: [{ text: { content: studentData.avatarEmoji || '👾' } }] },
-        'Avatar Emoji': { rich_text: [{ text: { content: studentData.avatarEmoji || '👾' } }] },
         'Branch': { select: { name: studentData.branch } },
         'Section': { select: { name: studentData.section } },
       };
@@ -249,7 +247,6 @@ export const notionDb = {
       const properties: any = {
         'Student ID': { rich_text: [{ text: { content: `STU-${studentData.mobileNumber}` } }] },
         'Name': { title: [{ text: { content: studentData.name } }] },
-        'Avatar Emoji': { rich_text: [{ text: { content: studentData.avatarEmoji || '👾' } }] },
         'Avatar Emoji': { rich_text: [{ text: { content: studentData.avatarEmoji || '👾' } }] },
         'Mobile Number': { rich_text: [{ text: { content: studentData.mobileNumber } }] },
         'Branch': { select: { name: studentData.branch } },

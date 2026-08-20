@@ -147,6 +147,14 @@ export default function BugHuntLanding() {
             Find real issues on the MSIT website. Report them with proof. Earn points. Get recognized by WDS.
           </p>
 
+          <a href="https://msit-website.netlify.app/" target="_blank" rel="noopener noreferrer" className="block max-w-lg border border-cyber-border bg-cyber-darkborder/20 p-4 font-mono text-sm text-cyber-text hover:bg-cyber-darkborder/40 transition-colors shadow-cyber-glow">
+            <div className="flex items-center space-x-2">
+              <LinkIcon className="w-4 h-4 text-cyber-yellow" />
+              <span className="font-bold uppercase tracking-wider text-cyber-yellow">Target Website:</span>
+            </div>
+            <p className="mt-1 text-cyber-subtext break-all">https://msit-website.netlify.app/</p>
+          </a>
+
           <div className="flex flex-col md:flex-row gap-4 items-center w-full">
             <Link href="/bug-hunt/report" className="w-full md:w-auto">
               <button className="w-full md:w-auto bg-cyber-border border-2 border-cyber-border text-black font-mono font-bold uppercase tracking-wider text-xs py-4 px-6 shadow-cyber-glow flex items-center justify-center space-x-1.5 transition-all active:translate-y-0.5 hover:bg-transparent hover:text-cyber-text">
