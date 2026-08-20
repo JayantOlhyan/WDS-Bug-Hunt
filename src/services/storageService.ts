@@ -1,28 +1,3 @@
-import { google } from 'googleapis';
-import { Readable } from 'stream';
-
-// Initialize Google Drive API lazily
-let driveService: any = null;
-
-function getDriveService() {
-  if (!driveService) {
-    const credsJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-    if (!credsJson) {
-      throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON environment variable is not set");
-    }
-
-    const credentials = JSON.parse(credsJson);
-    
-    const auth = new google.auth.GoogleAuth({
-      credentials,
-      scopes: ['https://www.googleapis.com/auth/drive.file'],
-    });
-
-    driveService = google.drive({ version: 'v3', auth });
-  }
-  return driveService;
-}
-
 export const storageService = {
   async uploadFile(file: File): Promise<string> {
     // Check file size (limit: 5MB)
@@ -38,53 +13,37 @@ export const storageService = {
       throw new Error(`File type .${extension || ''} is not allowed. Only PNG, JPG, JPEG, and WEBP files are accepted.`);
     }
 
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
-    if (!folderId) {
-      throw new Error("GOOGLE_DRIVE_FOLDER_ID environment variable is not set");
+    const apiKey = process.env.IMGBB_API_KEY;
+    if (!apiKey) {
+      throw new Error("IMGBB_API_KEY environment variable is not set");
     }
 
-    // Generate unique filename
-    const uniqueId = Math.random().toString(36).substring(2, 15);
-    const filename = `${Date.now()}-${uniqueId}.${extension}`;
-
-    // Read file bytes and convert to Readable stream for googleapis
+    // Convert file to base64
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const stream = new Readable();
-    stream.push(buffer);
-    stream.push(null);
+    const base64Image = buffer.toString('base64');
 
-    const drive = getDriveService();
+    // Prepare FormData for ImgBB API
+    const formData = new FormData();
+    formData.append('image', base64Image);
 
-    // Upload to Google Drive
-    const response = await drive.files.create({
-      requestBody: {
-        name: filename,
-        parents: [folderId],
-      },
-      media: {
-        mimeType: file.type || `image/${extension}`,
-        body: stream,
-      },
-      fields: 'id, webViewLink, webContentLink',
+    // Upload to ImgBB
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      method: 'POST',
+      body: formData,
     });
 
-    const fileId = response.data.id;
-
-    if (!fileId) {
-      throw new Error("Failed to upload file to Google Drive");
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Failed to upload image to ImgBB: ${errorData.error?.message || response.statusText}`);
     }
 
-    // Make the file publicly accessible
-    await drive.permissions.create({
-      fileId: fileId,
-      requestBody: {
-        role: 'reader',
-        type: 'anyone',
-      },
-    });
+    const resJson = await response.json();
+    if (!resJson.success || !resJson.data?.url) {
+      throw new Error(resJson.error?.message || "Invalid response from ImgBB API");
+    }
 
-    // Return the link that can be embedded/viewed
-    return response.data.webViewLink || response.data.webContentLink;
+    // Return the direct display URL
+    return resJson.data.url;
   }
 };

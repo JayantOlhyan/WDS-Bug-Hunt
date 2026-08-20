@@ -40,6 +40,7 @@ export default function BugReportForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [successData, setSuccessData] = useState<{ id: string } | null>(null);
+  const [isProfileSaved, setIsProfileSaved] = useState(false);
 
   // Load student details from localStorage
   useEffect(() => {
@@ -48,6 +49,9 @@ export default function BugReportForm() {
       try {
         const parsed = JSON.parse(cached);
         setDetails(prev => ({ ...prev, ...parsed }));
+        if (parsed.name && parsed.mobileNumber && parsed.branch && parsed.section) {
+          setIsProfileSaved(true);
+        }
       } catch (e) {
         console.error("Failed to parse cached student details", e);
       }
@@ -130,6 +134,7 @@ export default function BugReportForm() {
 
       // Cache student details for next submissions
       localStorage.setItem('msit_bughunt_student', JSON.stringify(details));
+      setIsProfileSaved(true);
 
       setSuccessData(result);
     } catch (err: any) {
@@ -245,144 +250,170 @@ export default function BugReportForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
         
         {/* Step 1: Your Details */}
-        <Card title="1. YOUR DETAILS">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-cyber-subtext">
-            <div className="space-y-1">
-              <label htmlFor="avatarEmoji" className="block text-cyber-text uppercase font-bold">Your Avatar *</label>
-              <div className="flex space-x-2">
+        {isProfileSaved ? (
+          <Card title="1. YOUR PROFILE" className="border-cyber-green/50 bg-cyber-green/5 shadow-cyber-glow">
+            <div className="font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+              <div className="flex items-center space-x-4">
+                <span className="text-4xl p-2 bg-black/40 border border-cyber-darkborder rounded shadow-cyber-glow">{details.avatarEmoji || '👾'}</span>
+                <div>
+                  <div className="text-cyber-text font-black text-sm uppercase tracking-wider">{details.name}</div>
+                  <div className="text-cyber-subtext mt-0.5">
+                    Branch: <span className="text-cyber-text font-bold">{details.branch}</span> | Section: <span className="text-cyber-text font-bold">{details.section}</span>
+                  </div>
+                  <div className="text-cyber-subtext">
+                    Mobile: <span className="text-cyber-text font-bold">{details.mobileNumber}</span>
+                  </div>
+                </div>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setIsProfileSaved(false)}
+                className="self-start sm:self-center border border-cyber-yellow text-cyber-yellow hover:bg-cyber-yellow/20 px-3 py-1.5 uppercase font-bold tracking-widest text-[10px] transition-colors"
+              >
+                Edit Profile
+              </button>
+            </div>
+          </Card>
+        ) : (
+          <Card title="1. YOUR DETAILS">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-cyber-subtext">
+              <div className="space-y-1">
+                <label htmlFor="avatarEmoji" className="block text-cyber-text uppercase font-bold">Your Avatar *</label>
+                <div className="flex space-x-2">
+                  <input 
+                    type="text" 
+                    id="avatarEmoji" 
+                    name="avatarEmoji" 
+                    value={details.avatarEmoji} 
+                    onChange={handleDetailsChange}
+                    maxLength={2}
+                    className="w-16 bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xl text-center"
+                    required 
+                  />
+                  <div className="flex-1 text-[10px] self-center text-cyber-subtext opacity-70">
+                    Pick an emoji to represent you on the leaderboard (e.g. 👾, 🦊, ⚡️)
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-1 sm:col-start-1">
+                <label htmlFor="name" className="block text-cyber-text uppercase font-bold">Full Name *</label>
                 <input 
                   type="text" 
-                  id="avatarEmoji" 
-                  name="avatarEmoji" 
-                  value={details.avatarEmoji} 
+                  id="name" 
+                  name="name" 
+                  value={details.name} 
                   onChange={handleDetailsChange}
-                  maxLength={2}
-                  className="w-16 bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xl text-center"
+                  placeholder="Enter your name" 
+                  className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                   required 
                 />
-                <div className="flex-1 text-[10px] self-center text-cyber-subtext opacity-70">
-                  Pick an emoji to represent you on the leaderboard (e.g. 👾, 🦊, ⚡️)
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="mobileNumber" className="block text-cyber-text uppercase font-bold">Personal Mobile Number *</label>
+                <input 
+                  type="tel" 
+                  id="mobileNumber" 
+                  name="mobileNumber" 
+                  value={details.mobileNumber} 
+                  onChange={handleDetailsChange}
+                  placeholder="Enter personal mobile number" 
+                  className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
+                  required 
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="branch" className="block text-cyber-text uppercase font-bold">Branch *</label>
+                <select 
+                  id="branch" 
+                  name="branch" 
+                  value={details.branch} 
+                  onChange={handleDetailsChange}
+                  className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
+                  required
+                >
+                  <option value="">Select branch</option>
+                  <option value="CSE">CSE</option>
+                  <option value="IT">IT</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="section" className="block text-cyber-text uppercase font-bold">Section *</label>
+                <select 
+                  id="section" 
+                  name="section" 
+                  value={details.section} 
+                  onChange={handleDetailsChange}
+                  className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
+                  required
+                >
+                  <option value="">Select section</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="Evening">Evening</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="github" className="block text-cyber-text uppercase font-bold font-mono">GitHub Profile (Optional)</label>
+                <input 
+                  type="url" 
+                  id="github" 
+                  name="github" 
+                  value={details.github} 
+                  onChange={handleDetailsChange}
+                  placeholder="https://github.com/username" 
+                  className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="linkedin" className="block text-cyber-text uppercase font-bold font-mono">LinkedIn Profile (Optional)</label>
+                <input 
+                  type="url" 
+                  id="linkedin" 
+                  name="linkedin" 
+                  value={details.linkedin} 
+                  onChange={handleDetailsChange}
+                  placeholder="https://linkedin.com/in/username" 
+                  className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
+                />
+              </div>
+              <div className="space-y-1 sm:col-span-2 pt-2 border-t border-cyber-darkborder/30">
+                <label className="block text-cyber-text uppercase font-bold mb-1">Are you interested in joining Web Development Society (WDS)?</label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center space-x-1.5 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="wdsInterest" 
+                      value="Yes" 
+                      checked={details.wdsInterest === 'Yes'} 
+                      onChange={handleDetailsChange} 
+                      className="accent-cyber-border cursor-pointer"
+                    />
+                    <span>Yes, I am interested!</span>
+                  </label>
+                  <label className="flex items-center space-x-1.5 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="wdsInterest" 
+                      value="No" 
+                      checked={details.wdsInterest === 'No'} 
+                      onChange={handleDetailsChange} 
+                      className="accent-cyber-border cursor-pointer"
+                    />
+                    <span>No, just reporting.</span>
+                  </label>
                 </div>
               </div>
             </div>
-            
-            <div className="space-y-1 sm:col-start-1">
-              <label htmlFor="name" className="block text-cyber-text uppercase font-bold">Full Name *</label>
-              <input 
-                type="text" 
-                id="name" 
-                name="name" 
-                value={details.name} 
-                onChange={handleDetailsChange}
-                placeholder="Enter your name" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-                required 
-              />
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="mobileNumber" className="block text-cyber-text uppercase font-bold">Personal Mobile Number *</label>
-              <input 
-                type="tel" 
-                id="mobileNumber" 
-                name="mobileNumber" 
-                value={details.mobileNumber} 
-                onChange={handleDetailsChange}
-                placeholder="Enter personal mobile number" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-                required 
-              />
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="branch" className="block text-cyber-text uppercase font-bold">Branch *</label>
-              <select 
-                id="branch" 
-                name="branch" 
-                value={details.branch} 
-                onChange={handleDetailsChange}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-                required
-              >
-                <option value="">Select branch</option>
-                <option value="CSE">CSE</option>
-                <option value="IT">IT</option>
-                <option value="ECE">ECE</option>
-                <option value="EEE">EEE</option>
-              </select>
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="section" className="block text-cyber-text uppercase font-bold">Section *</label>
-              <select 
-                id="section" 
-                name="section" 
-                value={details.section} 
-                onChange={handleDetailsChange}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-                required
-              >
-                <option value="">Select section</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="Evening">Evening</option>
-              </select>
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="github" className="block text-cyber-text uppercase font-bold font-mono">GitHub Profile (Optional)</label>
-              <input 
-                type="url" 
-                id="github" 
-                name="github" 
-                value={details.github} 
-                onChange={handleDetailsChange}
-                placeholder="https://github.com/username" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-              />
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="linkedin" className="block text-cyber-text uppercase font-bold font-mono">LinkedIn Profile (Optional)</label>
-              <input 
-                type="url" 
-                id="linkedin" 
-                name="linkedin" 
-                value={details.linkedin} 
-                onChange={handleDetailsChange}
-                placeholder="https://linkedin.com/in/username" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-              />
-            </div>
-            <div className="space-y-1 sm:col-span-2 pt-2 border-t border-cyber-darkborder/30">
-              <label className="block text-cyber-text uppercase font-bold mb-1">Are you interested in joining Web Development Society (WDS)?</label>
-              <div className="flex space-x-4">
-                <label className="flex items-center space-x-1.5 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="wdsInterest" 
-                    value="Yes" 
-                    checked={details.wdsInterest === 'Yes'} 
-                    onChange={handleDetailsChange} 
-                    className="accent-cyber-border cursor-pointer"
-                  />
-                  <span>Yes, I am interested!</span>
-                </label>
-                <label className="flex items-center space-x-1.5 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="wdsInterest" 
-                    value="No" 
-                    checked={details.wdsInterest === 'No'} 
-                    onChange={handleDetailsChange} 
-                    className="accent-cyber-border cursor-pointer"
-                  />
-                  <span>No, just reporting.</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        )}
 
         {/* Step 2: Bug Location */}
         <Card title="2. BUG LOCATION">
