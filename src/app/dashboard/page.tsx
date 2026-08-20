@@ -30,9 +30,9 @@ export default function StudentDashboard() {
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
-        if (parsed.enrollmentNumber) {
-          setSessionEnrollment(parsed.enrollmentNumber);
-          fetchDashboardData(parsed.enrollmentNumber);
+        if (parsed.mobileNumber) {
+          setSessionEnrollment(parsed.mobileNumber);
+          fetchDashboardData(parsed.mobileNumber);
         }
       } catch (e) {
         console.error("Error reading student session", e);
@@ -83,7 +83,7 @@ export default function StudentDashboard() {
     if (!enrollment.trim()) return;
     
     // Set temporary mock details to trigger session
-    const mockStudentSession = { enrollmentNumber: enrollment.trim() };
+    const mockStudentSession = { mobileNumber: enrollment.trim() };
     localStorage.setItem('msit_bughunt_student', JSON.stringify(mockStudentSession));
     setSessionEnrollment(enrollment.trim());
     fetchDashboardData(enrollment.trim());
@@ -169,7 +169,7 @@ export default function StudentDashboard() {
             {student?.name || 'Loading Student...'}
           </h1>
           <p className="text-cyber-subtext text-[11px]">
-            {student?.branch}-{student?.section} | EN. {student?.enrollmentNumber}
+            {student?.branch}-{student?.section} | EN. {student?.mobileNumber}
           </p>
         </div>
 

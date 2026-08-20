@@ -394,7 +394,7 @@ export default function BugHuntLanding() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {topHunters.map((hunter, idx) => (
-                  <div key={hunter.enrollmentNumber} className="border border-cyber-darkborder/40 p-3 bg-black/40 text-center relative flex flex-col items-center">
+                  <div key={hunter.mobileNumber} className="border border-cyber-darkborder/40 p-3 bg-black/40 text-center relative flex flex-col items-center">
                     <span className="absolute top-1 left-1 border border-cyber-darkborder bg-black text-[9px] font-bold p-0.5 px-1 inline-block">
                       {idx + 1}
                     </span>

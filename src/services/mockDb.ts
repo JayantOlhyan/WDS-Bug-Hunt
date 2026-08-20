@@ -52,12 +52,12 @@ export const mockDb = {
     db.bugs.push(newBug);
     
     // Upsert student total count
-    let student = db.students.find(s => s.enrollmentNumber === bug.studentEnrollment);
+    let student = db.students.find(s => s.mobileNumber === bug.studentMobile);
     if (!student) {
       student = {
-        enrollmentNumber: bug.studentEnrollment,
+        mobileNumber: bug.studentMobile,
         name: bug.studentName,
-        email: bug.studentEmail,
+        
         branch: bug.branch,
         section: bug.section,
         totalReports: 0,
@@ -107,10 +107,10 @@ export const mockDb = {
     db.bugs[bugIdx] = newBug;
 
     // Update student stats based on this validation
-    const student = db.students.find(s => s.enrollmentNumber === newBug.studentEnrollment);
+    const student = db.students.find(s => s.mobileNumber === newBug.studentMobile);
     if (student) {
       // Recalculate total points & report counters for this student
-      const studentBugs = db.bugs.filter(b => b.studentEnrollment === student.enrollmentNumber);
+      const studentBugs = db.bugs.filter(b => b.studentMobile === student.mobileNumber);
       
       student.validReports = studentBugs.filter(b => b.status === 'VALID' || b.status === 'FIXED' || b.status === 'VERIFIED').length;
       student.duplicateReports = studentBugs.filter(b => b.status === 'DUPLICATE').length;
@@ -126,7 +126,7 @@ export const mockDb = {
       if (student.fixedReports >= 1) badges.add('FIX_FINDER');
       
       // Quality check
-      const highQualityBugs = studentBugs.filter(b => b.reproductionSteps && b.reproductionSteps.length > 50 && b.screenshotUrl);
+      const highQualityBugs = studentBugs.filter(b => b.actualBehaviour && b.actualBehaviour.length > 50 && b.screenshotUrl);
       if (highQualityBugs.length >= 3) badges.add('QUALITY_REPORTER');
       
       student.badges = Array.from(badges);
@@ -168,9 +168,9 @@ export const mockDb = {
     return newBug;
   },
 
-  async getStudent(enrollmentNumber: string): Promise<Student | undefined> {
+  async getStudent(mobileNumber: string): Promise<Student | undefined> {
     const db = await readDb();
-    return db.students.find(s => s.enrollmentNumber === enrollmentNumber);
+    return db.students.find(s => s.mobileNumber === mobileNumber);
   },
 
   async getStudents(): Promise<Student[]> {
@@ -180,7 +180,7 @@ export const mockDb = {
 
   async upsertStudent(studentData: Omit<Student, 'totalReports' | 'validReports' | 'duplicateReports' | 'fixedReports' | 'totalPoints' | 'badges' | 'createdAt'>): Promise<Student> {
     const db = await readDb();
-    const existingIdx = db.students.findIndex(s => s.enrollmentNumber === studentData.enrollmentNumber);
+    const existingIdx = db.students.findIndex(s => s.mobileNumber === studentData.mobileNumber);
     
     if (existingIdx !== -1) {
       db.students[existingIdx] = {
@@ -263,7 +263,7 @@ export const mockDb = {
     const sorted = [...db.students].sort((a, b) => b.totalPoints - a.totalPoints);
     
     db.students = db.students.map(student => {
-      const idx = sorted.findIndex(s => s.enrollmentNumber === student.enrollmentNumber);
+      const idx = sorted.findIndex(s => s.mobileNumber === student.mobileNumber);
       return {
         ...student,
         currentRank: idx !== -1 ? idx + 1 : undefined
