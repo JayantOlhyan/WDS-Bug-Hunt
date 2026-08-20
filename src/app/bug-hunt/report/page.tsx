@@ -142,12 +142,21 @@ export default function BugReportForm() {
   if (successData) {
     return (
       <div className="max-w-md mx-auto py-12">
-        <Card title="SUBMISSION_SUCCESSFUL" className="border-cyber-green shadow-cyber-glow-green">
+        <Card title="CONGRATULATIONS" className="border-cyber-green shadow-cyber-glow-green">
           <div className="font-mono text-center space-y-6 py-4">
-            <CheckCircle className="h-16 w-16 text-cyber-green mx-auto animate-bounce" />
-            <h2 className="text-xl font-bold uppercase tracking-wider text-cyber-green text-glow-green">
-              BUG REPORT SUBMITTED
-            </h2>
+            <div className="relative inline-block">
+              <CheckCircle className="h-16 w-16 text-cyber-green mx-auto animate-bounce" />
+              <span className="absolute -top-1 -right-2 text-2xl animate-ping opacity-75">🎉</span>
+              <span className="absolute -bottom-1 -left-2 text-2xl animate-pulse">✨</span>
+            </div>
+            <div className="space-y-1">
+              <h2 className="text-2xl font-black uppercase tracking-widest text-cyber-green text-glow-green">
+                🎉 CONGRATULATIONS! 🎉
+              </h2>
+              <p className="text-xs uppercase tracking-wider text-cyber-yellow">
+                Bug report successfully compiled & logged
+              </p>
+            </div>
             
             <div className="border border-cyber-darkborder bg-black/40 p-4 font-mono text-xs space-y-2 text-left">
               <div className="flex justify-between">
@@ -187,7 +196,7 @@ export default function BugReportForm() {
                   setScreenshotPreview(null);
                 }}
               >
-                SUBMIT ANOTHER BUG
+                ADD A BUG
               </TerminalButton>
               <TerminalButton 
                 variant="secondary"
