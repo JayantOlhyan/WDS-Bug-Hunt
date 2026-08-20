@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Monitor } from 'lucide-react';
 import { TerminalButton } from './TerminalButton';
@@ -38,7 +39,7 @@ export const Navbar: React.FC = () => {
           {/* Logo / Society Branding */}
           <div className="flex items-center">
             <Link href="/bug-hunt" className="flex items-center space-x-2 text-cyber-text hover:opacity-80">
-              <Monitor className="h-5 w-5 animate-pulse text-cyber-border" />
+              <Image src="/logo.png" alt="WDS Logo" width={32} height={32} className="object-contain" />
               <span className="font-mono text-xs sm:text-sm font-extrabold uppercase tracking-widest text-glow">
                 WEB DEV SOCIETY MSIT_
               </span>
