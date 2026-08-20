@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { dataService } from '@/services/dataService';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET() {
   try {
     const badges = await dataService.getBadges();
