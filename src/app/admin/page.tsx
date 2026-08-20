@@ -94,7 +94,7 @@ export default function AdminDashboard() {
       const matchesSearch = 
         r.id.toLowerCase().includes(search.toLowerCase()) || 
         r.studentName.toLowerCase().includes(search.toLowerCase()) ||
-        r.studentEnrollment.includes(search);
+        r.studentMobile.includes(search);
 
       // Status Match
       const matchesStatus = statusFilter === 'ALL' || r.status === statusFilter;
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
                       filteredReports.map((report) => (
                         <tr key={report.id} className="hover:bg-white/5 transition-colors group">
                           <td className="p-3 font-bold text-cyber-text">{report.id}</td>
-                          <td className="p-3 font-bold text-cyber-text">{report.studentName}</td>
+                          <td className="p-3 font-bold text-cyber-text"><span className="mr-2">{report.avatarEmoji || '👾'}</span>{report.studentName}</td>
                           <td className="p-3 text-cyber-subtext hidden sm:table-cell">{report.pageCategory}</td>
                           <td className="p-3 hidden sm:table-cell">
                             <span className="text-cyber-yellow">{report.studentSeverity || 'Minor'}</span>

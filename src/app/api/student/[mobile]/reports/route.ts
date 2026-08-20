@@ -3,14 +3,14 @@ import { dataService } from '@/services/dataService';
 
 export async function GET(
   request: Request,
-  { params }: { params: { enrollment: string } }
+  { params }: { params: { mobile: string } }
 ) {
   try {
     const bugs = await dataService.getBugs();
-    const studentBugs = bugs.filter(b => b.studentEnrollment === params.enrollment);
+    const studentBugs = bugs.filter(b => b.studentMobile === params.mobile);
     return NextResponse.json(studentBugs);
   } catch (error: any) {
-    console.error(`API Error fetching reports for student ${params.enrollment}:`, error);
+    console.error(`API Error fetching reports for student ${params.mobile}:`, error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

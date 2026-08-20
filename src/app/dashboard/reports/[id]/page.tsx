@@ -125,10 +125,6 @@ export default function StudentReportDetail({ params }: { params: { id: string }
                   <p className="text-cyber-subtext whitespace-pre-wrap leading-relaxed bg-black/25 p-3 border border-cyber-darkborder/25">{report.actualBehaviour}</p>
                 </div>
 
-                <div className="space-y-1">
-                  <span className="text-cyber-text font-bold uppercase">&gt; REPRODUCTION STEPS</span>
-                  <p className="text-cyber-subtext whitespace-pre-wrap leading-relaxed bg-black/25 p-3 border border-cyber-darkborder/25 font-mono">{report.reproductionSteps}</p>
-                </div>
 
                 {report.suggestedSolution && (
                   <div className="space-y-1">

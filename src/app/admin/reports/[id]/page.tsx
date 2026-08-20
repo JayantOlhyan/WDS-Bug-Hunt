@@ -191,11 +191,6 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   <p className="text-cyber-subtext whitespace-pre-wrap leading-relaxed bg-black/20 p-3 border border-cyber-darkborder/25">{report.actualBehaviour}</p>
                 </div>
 
-                <div>
-                  <span className="text-cyber-text font-bold uppercase block mb-1">&gt; REPRODUCTION STEPS</span>
-                  <p className="text-cyber-subtext whitespace-pre-wrap leading-relaxed bg-black/20 p-3 border border-cyber-darkborder/25">{report.reproductionSteps}</p>
-                </div>
-
                 {report.suggestedSolution && (
                   <div>
                     <span className="text-cyber-text font-bold uppercase block mb-1">&gt; SUGGESTED SOLUTION</span>
@@ -225,15 +220,11 @@ export default function AdminReportReview({ params }: { params: { id: string } }
             <div className="space-y-2 font-mono text-xs text-cyber-subtext py-2">
               <div className="flex justify-between border-b border-cyber-darkborder/20 pb-1">
                 <span>NAME:</span>
-                <span className="text-cyber-text font-bold">{report.studentName}</span>
+                <span className="text-cyber-text font-bold"><span className="mr-2">{report.avatarEmoji || '👾'}</span>{report.studentName}</span>
               </div>
               <div className="flex justify-between border-b border-cyber-darkborder/20 pb-1">
-                <span>ENROLLMENT:</span>
-                <span className="text-cyber-text">{report.studentEnrollment}</span>
-              </div>
-              <div className="flex justify-between border-b border-cyber-darkborder/20 pb-1">
-                <span>EMAIL:</span>
-                <span className="text-cyber-text lowercase">{report.studentEmail}</span>
+                <span>MOBILE:</span>
+                <span className="text-cyber-text">{report.studentMobile}</span>
               </div>
               <div className="flex justify-between">
                 <span>CLASS:</span>

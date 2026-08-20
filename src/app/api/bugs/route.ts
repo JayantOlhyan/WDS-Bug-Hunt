@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Server-side validation
-    const required = ['name', 'enrollmentNumber', 'email', 'branch', 'section', 'pageCategory', 'pageUrl', 'description', 'expectedBehaviour', 'actualBehaviour', 'reproductionSteps', 'screenshotUrl'];
+    const required = ['name', 'mobileNumber', 'branch', 'section', 'pageCategory', 'pageUrl', 'description', 'expectedBehaviour', 'actualBehaviour', 'screenshotUrl'];
     for (const field of required) {
       if (!body[field]) {
         return new NextResponse(`Missing required parameter: ${field}`, { status: 400 });
@@ -24,9 +24,9 @@ export async function POST(request: Request) {
     }
 
     const bugReport = await dataService.createBug({
-      studentEnrollment: body.enrollmentNumber,
+      studentMobile: body.mobileNumber,
+      avatarEmoji: body.avatarEmoji || '👾',
       studentName: body.name,
-      studentEmail: body.email,
       branch: body.branch,
       section: body.section,
       pageCategory: body.pageCategory,
@@ -34,7 +34,6 @@ export async function POST(request: Request) {
       description: body.description,
       expectedBehaviour: body.expectedBehaviour,
       actualBehaviour: body.actualBehaviour,
-      reproductionSteps: body.reproductionSteps,
       screenshotUrl: body.screenshotUrl,
       screenRecordingUrl: body.screenRecordingUrl || '',
       suggestedSolution: body.suggestedSolution || '',

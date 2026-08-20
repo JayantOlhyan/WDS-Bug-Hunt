@@ -63,7 +63,8 @@ export const notionDb = {
     const properties: any = {
       'Report ID': { rich_text: [{ text: { content: formattedId } }] },
       'Student': { title: [{ text: { content: bug.studentName } }] },
-      'Enrollment Number': { rich_text: [{ text: { content: bug.studentEnrollment } }] },
+      'Avatar Emoji': { rich_text: [{ text: { content: bug.avatarEmoji || '👾' } }] },
+      'Mobile Number': { rich_text: [{ text: { content: bug.studentMobile } }] },
       'Branch': { select: { name: bug.branch } },
       'Section': { select: { name: bug.section } },
       'Page Category': { select: { name: bug.pageCategory } },
@@ -71,7 +72,6 @@ export const notionDb = {
       'Bug Description': { rich_text: [{ text: { content: bug.description } }] },
       'Expected Behaviour': { rich_text: [{ text: { content: bug.expectedBehaviour } }] },
       'Actual Behaviour': { rich_text: [{ text: { content: bug.actualBehaviour } }] },
-      'Reproduction Steps': { rich_text: [{ text: { content: bug.reproductionSteps } }] },
       'Screenshot URL': { url: bug.screenshotUrl },
       'Status': { status: { name: 'NEW' } },
       'Points': { number: 0 },
@@ -100,7 +100,7 @@ export const notionDb = {
     });
 
     // Proactively update student's record
-    await this.updateStudentMetrics(bug.studentEnrollment, bug.studentName, bug.studentEmail, bug.branch, bug.section, bug.orientationId);
+    await this.updateStudentMetrics(bug.studentMobile, bug.studentName, bug.avatarEmoji, bug.branch, bug.section, bug.orientationId);
 
     return {
       ...bug,
@@ -180,19 +180,17 @@ export const notionDb = {
     };
 
     // Update student stats
-    await this.updateStudentMetrics(updatedBug.studentEnrollment, updatedBug.studentName, updatedBug.studentEmail, updatedBug.branch, updatedBug.section, updatedBug.orientationId);
+    await this.updateStudentMetrics(updatedBug.studentMobile, updatedBug.studentName, updatedBug.avatarEmoji, updatedBug.branch, updatedBug.section, updatedBug.orientationId);
 
     return updatedBug;
   },
 
-  async getStudent(enrollmentNumber: string): Promise<Student | undefined> {
-    const notion = getNotionClient();
     const response = await notion.databases.query({
       database_id: STUDENTS_DB_ID,
       filter: {
-        property: 'Enrollment Number',
+        property: 'Mobile Number',
         rich_text: {
-          equals: enrollmentNumber,
+          equals: mobileNumber,
         },
       },
     });
@@ -211,22 +209,22 @@ export const notionDb = {
 
   async upsertStudent(studentData: Omit<Student, 'totalReports' | 'validReports' | 'duplicateReports' | 'fixedReports' | 'totalPoints' | 'badges' | 'createdAt'>): Promise<Student> {
     const notion = getNotionClient();
-    const existing = await this.getStudent(studentData.enrollmentNumber);
+    const existing = await this.getStudent(studentData.mobileNumber);
 
     if (existing) {
       // Find page
       const response = await notion.databases.query({
         database_id: STUDENTS_DB_ID,
         filter: {
-          property: 'Enrollment Number',
-          rich_text: { equals: studentData.enrollmentNumber },
+          property: 'Mobile Number',
+          rich_text: { equals: studentData.mobileNumber },
         },
       });
       const pageId = response.results[0].id;
 
       const properties: any = {
         'Name': { title: [{ text: { content: studentData.name } }] },
-        'Email': { email: studentData.email },
+        'Avatar Emoji': { rich_text: [{ text: { content: studentData.avatarEmoji || '👾' } }] },
         'Branch': { select: { name: studentData.branch } },
         'Section': { select: { name: studentData.section } },
       };
@@ -245,10 +243,10 @@ export const notionDb = {
       };
     } else {
       const properties: any = {
-        'Student ID': { rich_text: [{ text: { content: `STU-${studentData.enrollmentNumber}` } }] },
+        'Student ID': { rich_text: [{ text: { content: `STU-${studentData.mobileNumber}` } }] },
         'Name': { title: [{ text: { content: studentData.name } }] },
-        'Enrollment Number': { rich_text: [{ text: { content: studentData.enrollmentNumber } }] },
-        'Email': { email: studentData.email },
+        'Avatar Emoji': { rich_text: [{ text: { content: studentData.avatarEmoji || '👾' } }] },
+        'Mobile Number': { rich_text: [{ text: { content: studentData.mobileNumber } }] },
         'Branch': { select: { name: studentData.branch } },
         'Section': { select: { name: studentData.section } },
         'Total Reports': { number: 0 },
@@ -347,9 +345,9 @@ export const notionDb = {
 
   // Dynamic metrics updates in Notion
   async updateStudentMetrics(
-    enrollmentNumber: string,
+    mobileNumber: string,
     name: string,
-    email: string,
+    avatarEmoji: string | undefined,
     branch: string,
     section: string,
     orientationId?: string
@@ -360,8 +358,8 @@ export const notionDb = {
     const allBugsResponse = await notion.databases.query({
       database_id: BUGS_DB_ID,
       filter: {
-        property: 'Enrollment Number',
-        rich_text: { equals: enrollmentNumber },
+        property: 'Mobile Number',
+        rich_text: { equals: mobileNumber },
       },
     });
     
@@ -377,15 +375,15 @@ export const notionDb = {
     if (validReports >= 5) badges.add('BUG_HUNTER');
     if (fixedReports >= 1) badges.add('FIX_FINDER');
     
-    const highQualityBugs = studentBugs.filter(b => b.reproductionSteps && b.reproductionSteps.length > 50 && b.screenshotUrl);
+    const highQualityBugs = studentBugs.filter(b => b.description && b.description.length > 50 && b.screenshotUrl);
     if (highQualityBugs.length >= 3) badges.add('QUALITY_REPORTER');
 
     // Find student page
     const studentResponse = await notion.databases.query({
       database_id: STUDENTS_DB_ID,
       filter: {
-        property: 'Enrollment Number',
-        rich_text: { equals: enrollmentNumber },
+        property: 'Mobile Number',
+        rich_text: { equals: mobileNumber },
       },
     });
 
@@ -408,10 +406,10 @@ export const notionDb = {
     } else {
       // Create student page
       const studentProps: any = {
-        'Student ID': { rich_text: [{ text: { content: `STU-${enrollmentNumber}` } }] },
+        'Student ID': { rich_text: [{ text: { content: `STU-${mobileNumber}` } }] },
         'Name': { title: [{ text: { content: name } }] },
-        'Enrollment Number': { rich_text: [{ text: { content: enrollmentNumber } }] },
-        'Email': { email },
+        'Avatar Emoji': { rich_text: [{ text: { content: avatarEmoji || '👾' } }] },
+        'Mobile Number': { rich_text: [{ text: { content: mobileNumber } }] },
         'Branch': { select: { name: branch } },
         'Section': { select: { name: section } },
         ...properties,
@@ -432,8 +430,8 @@ export const notionDb = {
     return {
       id: props['Report ID']?.rich_text[0]?.text?.content || page.id,
       studentName: props['Student']?.title[0]?.text?.content || '',
-      studentEnrollment: props['Enrollment Number']?.rich_text[0]?.text?.content || '',
-      studentEmail: props['Email']?.email || '',
+      avatarEmoji: props['Avatar Emoji']?.rich_text[0]?.text?.content || '👾',
+      studentMobile: props['Mobile Number']?.rich_text[0]?.text?.content || '',
       branch: props['Branch']?.select?.name || '',
       section: props['Section']?.select?.name || '',
       pageCategory: props['Page Category']?.select?.name || '',
@@ -441,7 +439,6 @@ export const notionDb = {
       description: props['Bug Description']?.rich_text[0]?.text?.content || '',
       expectedBehaviour: props['Expected Behaviour']?.rich_text[0]?.text?.content || '',
       actualBehaviour: props['Actual Behaviour']?.rich_text[0]?.text?.content || '',
-      reproductionSteps: props['Reproduction Steps']?.rich_text[0]?.text?.content || '',
       screenshotUrl: props['Screenshot URL']?.url || '',
       screenRecordingUrl: props['Screen Recording URL']?.url || undefined,
       suggestedSolution: props['Suggested Solution']?.rich_text[0]?.text?.content || undefined,
@@ -463,9 +460,9 @@ export const notionDb = {
   mapPageToStudent(page: any): Student {
     const props = page.properties;
     return {
-      enrollmentNumber: props['Enrollment Number']?.rich_text[0]?.text?.content || '',
+      mobileNumber: props['Mobile Number']?.rich_text[0]?.text?.content || '',
       name: props['Name']?.title[0]?.text?.content || '',
-      email: props['Email']?.email || '',
+      avatarEmoji: props['Avatar Emoji']?.rich_text[0]?.text?.content || '👾',
       branch: props['Branch']?.select?.name || '',
       section: props['Section']?.select?.name || '',
       github: props['GitHub']?.url || undefined,

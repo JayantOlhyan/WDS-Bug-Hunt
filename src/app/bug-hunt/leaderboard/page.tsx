@@ -221,14 +221,14 @@ export default function LeaderboardPage() {
                   
                   return (
                     <tr 
-                      key={stud.enrollmentNumber} 
+                      key={stud.mobileNumber} 
                       className={`hover:bg-white/5 transition-colors ${rank <= 3 ? 'bg-cyber-card/30' : ''}`}
                     >
                       <td className={`p-3 font-bold ${rankStyles[rank - 1] || 'text-cyber-subtext'}`}>
                         {rank}
                       </td>
                       <td className="p-3 font-bold text-cyber-text">
-                        {formatStudentName(stud.name)}
+                        <span className="mr-2">{stud.avatarEmoji || '👾'}</span>{formatStudentName(stud.name)}
                       </td>
                       <td className="p-3 text-cyber-subtext hidden sm:table-cell">{stud.branch}</td>
                       <td className="p-3 text-cyber-text hidden sm:table-cell">{stud.validReports} BUGS</td>

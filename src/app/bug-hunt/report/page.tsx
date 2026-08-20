@@ -12,10 +12,10 @@ export default function BugReportForm() {
   // Student details cache
   const [details, setDetails] = useState({
     name: '',
-    enrollmentNumber: '',
+    avatarEmoji: '👾',
+    mobileNumber: '',
     branch: '',
     section: '',
-    email: '',
     github: '',
     linkedin: '',
     wdsInterest: 'Yes',
@@ -28,7 +28,6 @@ export default function BugReportForm() {
     description: '',
     expectedBehaviour: '',
     actualBehaviour: '',
-    reproductionSteps: '',
     hasSuggestedSolution: 'No',
     suggestedSolution: '',
     studentSeverity: 'Minor',
@@ -79,7 +78,7 @@ export default function BugReportForm() {
     setSubmitError(null);
 
     // Validate details
-    if (!details.name || !details.enrollmentNumber || !details.email || !details.branch || !details.section) {
+    if (!details.name || !details.mobileNumber || !details.branch || !details.section) {
       setSubmitError("All fields in 'Your Details' are required.");
       setIsSubmitting(false);
       return;
@@ -180,7 +179,6 @@ export default function BugReportForm() {
                     description: '',
                     expectedBehaviour: '',
                     actualBehaviour: '',
-                    reproductionSteps: '',
                     hasSuggestedSolution: 'No',
                     suggestedSolution: '',
                     studentSeverity: 'Minor',
@@ -215,6 +213,14 @@ export default function BugReportForm() {
         </p>
       </div>
 
+      <div className="border border-cyber-yellow bg-cyber-yellow/10 p-4 font-mono text-xs flex items-start sm:items-center space-x-3 text-cyber-yellow shadow-cyber-glow">
+        <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5 sm:mt-0" />
+        <div className="space-y-1">
+          <p className="font-bold uppercase tracking-widest">Prerequisite Task</p>
+          <p className="text-cyber-subtext">You must be added to the official WDS WhatsApp group for further interviews. Make sure you have joined before submitting your report.</p>
+        </div>
+      </div>
+
       {submitError && (
         <div className="border border-cyber-red bg-cyber-red/10 p-4 font-mono text-xs flex items-center space-x-3 text-cyber-red shadow-cyber-glow-red">
           <AlertTriangle className="h-5 w-5 flex-shrink-0" />
@@ -228,6 +234,25 @@ export default function BugReportForm() {
         <Card title="1. YOUR DETAILS">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-cyber-subtext">
             <div className="space-y-1">
+              <label htmlFor="avatarEmoji" className="block text-cyber-text uppercase font-bold">Your Avatar *</label>
+              <div className="flex space-x-2">
+                <input 
+                  type="text" 
+                  id="avatarEmoji" 
+                  name="avatarEmoji" 
+                  value={details.avatarEmoji} 
+                  onChange={handleDetailsChange}
+                  maxLength={2}
+                  className="w-16 bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xl text-center"
+                  required 
+                />
+                <div className="flex-1 text-[10px] self-center text-cyber-subtext opacity-70">
+                  Pick an emoji to represent you on the leaderboard (e.g. 👾, 🦊, ⚡️)
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-1 sm:col-start-1">
               <label htmlFor="name" className="block text-cyber-text uppercase font-bold">Full Name *</label>
               <input 
                 type="text" 
@@ -241,14 +266,14 @@ export default function BugReportForm() {
               />
             </div>
             <div className="space-y-1">
-              <label htmlFor="enrollmentNumber" className="block text-cyber-text uppercase font-bold">Enrollment Number *</label>
+              <label htmlFor="mobileNumber" className="block text-cyber-text uppercase font-bold">Personal Mobile Number *</label>
               <input 
-                type="text" 
-                id="enrollmentNumber" 
-                name="enrollmentNumber" 
-                value={details.enrollmentNumber} 
+                type="tel" 
+                id="mobileNumber" 
+                name="mobileNumber" 
+                value={details.mobileNumber} 
                 onChange={handleDetailsChange}
-                placeholder="Enter enrollment number" 
+                placeholder="Enter personal mobile number" 
                 className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required 
               />
@@ -268,8 +293,6 @@ export default function BugReportForm() {
                 <option value="IT">IT</option>
                 <option value="ECE">ECE</option>
                 <option value="EEE">EEE</option>
-                <option value="CVE">CVE</option>
-                <option value="Other">Other</option>
               </select>
             </div>
             <div className="space-y-1">
@@ -283,24 +306,12 @@ export default function BugReportForm() {
                 required
               >
                 <option value="">Select section</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="Evening">Evening</option>
               </select>
-            </div>
-            <div className="space-y-1 sm:col-span-2">
-              <label htmlFor="email" className="block text-cyber-text uppercase font-bold">College Email *</label>
-              <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                value={details.email} 
-                onChange={handleDetailsChange}
-                placeholder="Enter college email" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
-                required 
-              />
             </div>
             <div className="space-y-1">
               <label htmlFor="github" className="block text-cyber-text uppercase font-bold font-mono">GitHub Profile (Optional)</label>
@@ -441,20 +452,6 @@ export default function BugReportForm() {
                 onChange={handleBugChange}
                 placeholder="What actually occurred when you tested it?" 
                 rows={2}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
-                required 
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label htmlFor="reproductionSteps" className="block text-cyber-text uppercase font-bold">How can someone reproduce this issue? *</label>
-              <textarea 
-                id="reproductionSteps" 
-                name="reproductionSteps" 
-                value={bug.reproductionSteps} 
-                onChange={handleBugChange}
-                placeholder="Step-by-step instructions (e.g. 1. Go to page... 2. Click button...)" 
-                rows={3}
                 className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
                 required 
               />

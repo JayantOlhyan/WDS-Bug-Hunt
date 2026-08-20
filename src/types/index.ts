@@ -1,8 +1,8 @@
 export interface BugReport {
   id: string;
-  studentEnrollment: string;
+  studentMobile: string;
+  avatarEmoji?: string;
   studentName: string;
-  studentEmail: string;
   branch: string;
   section: string;
   pageCategory: string;
@@ -10,7 +10,6 @@ export interface BugReport {
   description: string;
   expectedBehaviour: string;
   actualBehaviour: string;
-  reproductionSteps: string;
   screenshotUrl: string;
   screenRecordingUrl?: string;
   suggestedSolution?: string;
@@ -29,9 +28,9 @@ export interface BugReport {
 }
 
 export interface Student {
-  enrollmentNumber: string;
+  mobileNumber: string;
+  avatarEmoji?: string;
   name: string;
-  email: string;
   branch: string;
   section: string;
   github?: string;
