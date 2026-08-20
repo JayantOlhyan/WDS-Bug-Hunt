@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { BootSequence } from "@/components/BootSequence";
 
 const spaceMono = Space_Mono({ 
   subsets: ["latin"],
@@ -24,6 +25,9 @@ export default function RootLayout({
       <body className="bg-cyber-bg text-cyber-text font-mono min-h-screen flex flex-col relative grid-bg">
         {/* CRT Scanline Overlay */}
         <div className="scanlines"></div>
+        
+        {/* Startup Animation Overlay */}
+        <BootSequence />
         
         {/* Navigation Header */}
         <Navbar />
