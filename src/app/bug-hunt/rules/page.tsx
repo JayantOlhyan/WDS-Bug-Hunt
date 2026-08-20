@@ -100,7 +100,7 @@ export default function RulesPage() {
       <Card title="RECRUITMENT_COMPLIANCE">
         <div className="space-y-2 py-1 leading-relaxed text-cyber-subtext">
           <p>
-            The महाराजा सूरजमल संस्थान (MSIT) values technical competence, integrity, and ethical conduct. By participating in this Bug Hunt orientation activity, you agree to report any found issues privately through the official Web Dev Society reporting tool.
+            The Maharaja Surajmal Institute of Technology (MSIT) values technical competence, integrity, and ethical conduct. By participating in this Bug Hunt orientation activity, you agree to report any found issues privately through the official Web Dev Society reporting tool.
           </p>
           <p className="pt-2">
             Exposing vulnerabilities publicly (such as posting screenshots on social media before they are fixed) will immediately disqualify you from future WDS recruitment processes.

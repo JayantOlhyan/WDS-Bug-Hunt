@@ -98,6 +98,13 @@ const PixelAvatar = ({ type }: { type: number }) => {
 export default function BugHuntLanding() {
   const [topHunters, setTopHunters] = useState<Student[]>([]);
   const [loadingTop, setLoadingTop] = useState(true);
+  const [stats, setStats] = useState({
+    totalBugs: 0,
+    totalPoints: 0,
+    activeHunters: 0,
+    orientationsCount: 0
+  });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     const fetchTop = async () => {
@@ -113,7 +120,23 @@ export default function BugHuntLanding() {
         setLoadingTop(false);
       }
     };
+
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/stats');
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        }
+      } catch (err) {
+        console.error("Failed to load stats", err);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
     fetchTop();
+    fetchStats();
   }, []);
 
   const formatStudentName = (fullName: string) => {
@@ -221,25 +244,33 @@ export default function BugHuntLanding() {
                   <span className="text-cyber-subtext flex items-center space-x-1.5">
                     <span>👾</span> <span>BUGS FOUND</span>
                   </span>
-                  <span className="font-bold text-cyber-text">305+</span>
+                  <span className="font-bold text-cyber-text">
+                    {loadingStats ? '...' : `${stats.totalBugs}`}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-cyber-subtext flex items-center space-x-1.5">
                     <span>🪙</span> <span>POINTS DISTRIBUTED</span>
                   </span>
-                  <span className="font-bold text-cyber-text">2,850 PTS</span>
+                  <span className="font-bold text-cyber-text">
+                    {loadingStats ? '...' : `${stats.totalPoints.toLocaleString()} PTS`}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-cyber-subtext flex items-center space-x-1.5">
                     <span>👤</span> <span>ACTIVE HUNTERS</span>
                   </span>
-                  <span className="font-bold text-cyber-text">64 MEMBERS</span>
+                  <span className="font-bold text-cyber-text">
+                    {loadingStats ? '...' : `${stats.activeHunters} MEMBERS`}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-cyber-subtext flex items-center space-x-1.5">
                     <span>🎓</span> <span>ORIENTATIONS</span>
                   </span>
-                  <span className="font-bold text-cyber-text">5 COMPLETED</span>
+                  <span className="font-bold text-cyber-text">
+                    {loadingStats ? '...' : `${stats.orientationsCount} COMPLETED`}
+                  </span>
                 </div>
               </div>
 
