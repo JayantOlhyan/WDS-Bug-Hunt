@@ -142,9 +142,6 @@ export const notionDb = {
       'Reviewed At': { date: { start: reviewedAt } },
     };
 
-    if (updates.status) {
-      properties['Status'] = { status: { name: updates.status } };
-    }
     if (updates.officialSeverity) {
       properties['Official Severity'] = { select: { name: updates.officialSeverity } };
     }
@@ -445,7 +442,12 @@ export const notionDb = {
       suggestedSolution: props['Suggested Solution']?.rich_text[0]?.text?.content || undefined,
       studentSeverity: props['Student Severity']?.select?.name || undefined,
       officialSeverity: props['Official Severity']?.select?.name || undefined,
-      status: mapNotionStatus(props['Status']?.status?.name),
+      status: mapNotionStatus(
+        props['Status']?.status?.name,
+        props['Points']?.number || 0,
+        props['Duplicate']?.checkbox || false,
+        props['Fixed']?.checkbox || false
+      ),
       points: props['Points']?.number || 0,
       duplicate: props['Duplicate']?.checkbox || false,
       firstReport: props['First Report']?.checkbox || false,
@@ -511,21 +513,30 @@ export const notionDb = {
   }
 };
 
-function mapNotionStatus(statusName: string | undefined): any {
-  if (!statusName) return 'NEW';
-  const name = statusName.toUpperCase();
-  if (name === 'NOT STARTED' || name === 'TO DO' || name === 'NEW' || name === 'BACKLOG') {
-    return 'NEW';
+function mapNotionStatus(
+  statusName: string | undefined,
+  points: number,
+  duplicate: boolean,
+  fixed: boolean
+): any {
+  if (statusName) {
+    const name = statusName.toUpperCase();
+    const allowed = ['VALID', 'INVALID', 'DUPLICATE', 'NEEDS MORE INFORMATION', 'PRIORITIZED', 'IN PROGRESS', 'FIXED', 'VERIFIED', 'UNDER REVIEW'];
+    if (allowed.includes(name)) {
+      return name;
+    }
   }
-  if (name === 'IN PROGRESS' || name === 'IN_PROGRESS' || name === 'UNDER REVIEW') {
-    return 'UNDER REVIEW';
-  }
-  if (name === 'DONE' || name === 'FIXED' || name === 'COMPLETED' || name === 'VERIFIED') {
-    return 'FIXED';
-  }
-  const allowed = ['NEW', 'UNDER REVIEW', 'VALID', 'INVALID', 'DUPLICATE', 'NEEDS MORE INFORMATION', 'PRIORITIZED', 'IN PROGRESS', 'FIXED', 'VERIFIED'];
-  if (allowed.includes(name)) {
-    return name;
+
+  // Fallback to dynamic mapping from checkboxes and points
+  if (duplicate) return 'DUPLICATE';
+  if (fixed) return 'FIXED';
+  if (points > 0) return 'VALID';
+
+  if (statusName) {
+    const name = statusName.toUpperCase();
+    if (name === 'NOT STARTED' || name === 'TO DO' || name === 'NEW' || name === 'BACKLOG') {
+      return 'NEW';
+    }
   }
   return 'NEW';
 }
