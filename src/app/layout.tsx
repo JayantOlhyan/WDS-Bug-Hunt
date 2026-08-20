@@ -45,6 +45,10 @@ export default function RootLayout({
             <span className="font-bold text-cyber-text">&gt;_ ONE SOCIETY. COUNTLESS POSSIBILITIES. BE PART OF IT.</span>
             <span className="hidden md:inline">|</span>
             <span>WEB DEVELOPMENT SOCIETY (WDS), MSIT © {new Date().getFullYear()}</span>
+            <span className="hidden md:inline">|</span>
+            <a href="/admin" className="text-cyber-accent hover:underline decoration-cyber-accent/50 underline-offset-4 transition-all">
+              [ADMIN_ACCESS]
+            </a>
           </div>
         </footer>
       </body>
