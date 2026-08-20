@@ -73,7 +73,6 @@ export const notionDb = {
       'Expected Behaviour': { rich_text: [{ text: { content: bug.expectedBehaviour } }] },
       'Actual Behaviour': { rich_text: [{ text: { content: bug.actualBehaviour } }] },
       'Screenshot URL': { url: bug.screenshotUrl },
-      'Status': { status: { name: 'NEW' } },
       'Points': { number: 0 },
       'Duplicate': { checkbox: false },
       'First Report': { checkbox: false },
@@ -446,7 +445,7 @@ export const notionDb = {
       suggestedSolution: props['Suggested Solution']?.rich_text[0]?.text?.content || undefined,
       studentSeverity: props['Student Severity']?.select?.name || undefined,
       officialSeverity: props['Official Severity']?.select?.name || undefined,
-      status: props['Status']?.status?.name || 'NEW',
+      status: mapNotionStatus(props['Status']?.status?.name),
       points: props['Points']?.number || 0,
       duplicate: props['Duplicate']?.checkbox || false,
       firstReport: props['First Report']?.checkbox || false,
@@ -511,3 +510,23 @@ export const notionDb = {
     };
   }
 };
+
+function mapNotionStatus(statusName: string | undefined): any {
+  if (!statusName) return 'NEW';
+  const name = statusName.toUpperCase();
+  if (name === 'NOT STARTED' || name === 'TO DO' || name === 'NEW' || name === 'BACKLOG') {
+    return 'NEW';
+  }
+  if (name === 'IN PROGRESS' || name === 'IN_PROGRESS' || name === 'UNDER REVIEW') {
+    return 'UNDER REVIEW';
+  }
+  if (name === 'DONE' || name === 'FIXED' || name === 'COMPLETED' || name === 'VERIFIED') {
+    return 'FIXED';
+  }
+  const allowed = ['NEW', 'UNDER REVIEW', 'VALID', 'INVALID', 'DUPLICATE', 'NEEDS MORE INFORMATION', 'PRIORITIZED', 'IN PROGRESS', 'FIXED', 'VERIFIED'];
+  if (allowed.includes(name)) {
+    return name;
+  }
+  return 'NEW';
+}
+
