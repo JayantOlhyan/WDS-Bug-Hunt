@@ -54,7 +54,7 @@ export default function StudentReportDetail({ params }: { params: { id: string }
           {error || 'Report not found.'}
         </div>
         <Link href="/dashboard">
-          <TerminalButton variant="primary" className="w-full">
+          <TerminalButton variant="primary" className="w-full py-4 min-h-[48px]">
             RETURN TO DASHBOARD
           </TerminalButton>
         </Link>
@@ -80,7 +80,7 @@ export default function StudentReportDetail({ params }: { params: { id: string }
       
       {/* Header back navigation */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center space-x-1.5 text-cyber-subtext hover:text-cyber-text transition-colors">
+        <Link href="/dashboard" className="inline-flex items-center space-x-1.5 text-cyber-subtext hover:text-cyber-text transition-colors py-2 min-h-[44px]">
           <ArrowLeft className="h-4 w-4" />
           <span>BACK TO DASHBOARD</span>
         </Link>

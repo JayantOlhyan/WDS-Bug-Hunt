@@ -36,7 +36,7 @@ export default function HowItWorksPage() {
       {/* Four core steps */}
       <div className="space-y-4">
         <span className="text-cyber-text font-bold uppercase tracking-wider block">&gt; CORE STEPS</span>
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { step: '01', title: 'FIND BUGS', desc: 'Browse the MSIT website and hunt for broken parts, spelling errors, or layout issues.' },
             { step: '02', title: 'REPORT IT', desc: 'Submit a report with the page URL, screenshots, and simple explanation.' },
@@ -104,9 +104,9 @@ export default function HowItWorksPage() {
         </div>
       </Card>
 
-      <div className="flex justify-center pt-2">
-        <Link href="/bug-hunt/report">
-          <TerminalButton variant="primary" className="px-8 py-3 text-sm">
+      <div className="flex flex-col sm:flex-row justify-center pt-2 w-full">
+        <Link href="/bug-hunt/report" className="w-full sm:w-auto">
+          <TerminalButton variant="primary" className="w-full sm:w-auto px-8 py-4 text-sm flex justify-center">
             START HUNTING NOW &gt;
           </TerminalButton>
         </Link>

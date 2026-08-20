@@ -74,7 +74,7 @@ export const Navbar: React.FC = () => {
           <div className="flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 text-cyber-subtext hover:text-cyber-text focus:outline-none"
+              className="inline-flex items-center justify-center p-2 text-cyber-subtext hover:text-cyber-text focus:outline-none min-h-[48px] min-w-[48px]"
               aria-expanded={isOpen}
               aria-label="Toggle navigation menu"
             >
@@ -96,7 +96,7 @@ export const Navbar: React.FC = () => {
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={`font-mono text-sm font-bold tracking-widest uppercase py-2 border-b border-dashed border-cyber-darkborder hover:text-cyber-text ${
+                  className={`block w-full font-mono text-sm font-bold tracking-widest uppercase py-4 border-b border-dashed border-cyber-darkborder hover:text-cyber-text ${
                     isActive ? 'text-cyber-text text-glow' : 'text-cyber-subtext'
                   }`}
                 >

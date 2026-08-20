@@ -157,7 +157,7 @@ export default function LeaderboardPage() {
                     setSelectedBranch('ALL');
                   }
                 }}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 border font-bold transition-all text-[10px] ${
+                className={`flex flex-1 sm:flex-none justify-center items-center space-x-1.5 px-3 py-3 sm:py-1.5 min-h-[44px] border font-bold transition-all text-[10px] ${
                   isActive 
                     ? 'border-cyber-border text-cyber-text bg-cyber-card shadow-cyber-glow' 
                     : 'border-cyber-darkborder/40 text-cyber-subtext hover:text-cyber-text'
@@ -176,7 +176,7 @@ export default function LeaderboardPage() {
           <select
             value={selectedBranch}
             onChange={(e) => setSelectedBranch(e.target.value)}
-            className="bg-cyber-card border border-cyber-darkborder p-1.5 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+            className="bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] w-full sm:w-auto text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
           >
             <option value="ALL">ALL BRANCHES</option>
             <option value="CSE">CSE (COMP. SCIENCE)</option>
@@ -194,12 +194,12 @@ export default function LeaderboardPage() {
           <table className="w-full text-left font-mono">
             <thead>
               <tr className="border-b border-cyber-darkborder bg-cyber-card text-cyber-text">
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider w-16">RANK</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider w-12 sm:w-16">RANK</th>
                 <th className="p-3 text-[10px] uppercase font-bold tracking-wider">STUDENT</th>
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider">BRANCH</th>
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider">VERIFIED BUGS</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">BRANCH</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">VERIFIED BUGS</th>
                 <th className="p-3 text-[10px] uppercase font-bold tracking-wider">POINTS</th>
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider text-right">BADGES</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider text-right hidden sm:table-cell">BADGES</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-cyber-darkborder/30">
@@ -230,10 +230,10 @@ export default function LeaderboardPage() {
                       <td className="p-3 font-bold text-cyber-text">
                         {formatStudentName(stud.name)}
                       </td>
-                      <td className="p-3 text-cyber-subtext">{stud.branch}</td>
-                      <td className="p-3 text-cyber-text">{stud.validReports} BUGS</td>
+                      <td className="p-3 text-cyber-subtext hidden sm:table-cell">{stud.branch}</td>
+                      <td className="p-3 text-cyber-text hidden sm:table-cell">{stud.validReports} BUGS</td>
                       <td className="p-3 font-bold text-cyber-green text-glow">{stud.totalPoints} PTS</td>
-                      <td className="p-3 text-right">
+                      <td className="p-3 text-right hidden sm:table-cell">
                         <div className="flex justify-end space-x-1.5">
                           {stud.badges.length === 0 ? (
                             <span className="text-[9px] text-cyber-subtext">-</span>

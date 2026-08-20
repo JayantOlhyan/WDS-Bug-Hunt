@@ -112,12 +112,12 @@ export default function StudentDashboard() {
                 value={enrollment}
                 onChange={(e) => setEnrollment(e.target.value)}
                 placeholder="e.g. 0433010123" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2.5 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required 
               />
             </div>
 
-            <TerminalButton type="submit" variant="primary" className="w-full flex items-center justify-center space-x-2">
+            <TerminalButton type="submit" variant="primary" className="w-full py-4 min-h-[48px] flex items-center justify-center space-x-2">
               <LogIn className="h-4 w-4" />
               <span>ACCESS DASHBOARD</span>
             </TerminalButton>
@@ -147,10 +147,10 @@ export default function StudentDashboard() {
           {error}
         </div>
         <div className="flex space-x-4">
-          <TerminalButton variant="primary" onClick={handleLogout} className="flex-1">
+          <TerminalButton variant="primary" onClick={handleLogout} className="flex-1 py-4 min-h-[48px]">
             CHANGE ENROLLMENT
           </TerminalButton>
-          <TerminalButton variant="secondary" onClick={() => fetchDashboardData(sessionEnrollment)} className="flex-1">
+          <TerminalButton variant="secondary" onClick={() => fetchDashboardData(sessionEnrollment)} className="flex-1 py-4 min-h-[48px]">
             RETRY
           </TerminalButton>
         </div>
@@ -178,11 +178,11 @@ export default function StudentDashboard() {
             variant="secondary" 
             onClick={() => fetchDashboardData(sessionEnrollment, true)}
             disabled={isRefreshing}
-            className="p-2"
+            className="p-3 min-h-[48px]"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </TerminalButton>
-          <TerminalButton variant="danger" onClick={handleLogout} className="text-xs">
+          <TerminalButton variant="danger" onClick={handleLogout} className="text-xs px-4 py-3 min-h-[48px]">
             DISCONNECT
           </TerminalButton>
         </div>
@@ -235,11 +235,11 @@ export default function StudentDashboard() {
           <table className="w-full text-left font-mono">
             <thead>
               <tr className="border-b border-cyber-darkborder bg-cyber-card text-cyber-text">
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider">ID</th>
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider">PAGE CATEGORY</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider w-12 sm:w-16">ID</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">PAGE CATEGORY</th>
                 <th className="p-3 text-[10px] uppercase font-bold tracking-wider">STATUS</th>
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider">POINTS</th>
-                <th className="p-3 text-[10px] uppercase font-bold tracking-wider">SUBMITTED</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">POINTS</th>
+                <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">SUBMITTED</th>
                 <th className="p-3 text-[10px] uppercase font-bold tracking-wider text-right">ACTION</th>
               </tr>
             </thead>
@@ -272,16 +272,16 @@ export default function StudentDashboard() {
                       className="hover:bg-white/5 transition-colors cursor-pointer group"
                     >
                       <td className="p-3 font-bold text-cyber-text group-hover:text-glow">{report.id}</td>
-                      <td className="p-3 text-cyber-subtext">{report.pageCategory}</td>
+                      <td className="p-3 text-cyber-subtext hidden sm:table-cell">{report.pageCategory}</td>
                       <td className="p-3">
                         <span className={`px-2 py-0.5 border text-[9px] uppercase font-bold ${statusColors[report.status] || 'border-cyber-border text-cyber-text'}`}>
                           {report.status}
                         </span>
                       </td>
-                      <td className="p-3 font-bold text-cyber-green">
+                      <td className="p-3 font-bold text-cyber-green hidden sm:table-cell">
                         {report.points > 0 ? `+${report.points}` : report.points}
                       </td>
-                      <td className="p-3 text-cyber-subtext">{new Date(report.submittedAt).toLocaleDateString()}</td>
+                      <td className="p-3 text-cyber-subtext hidden sm:table-cell">{new Date(report.submittedAt).toLocaleDateString()}</td>
                       <td className="p-3 text-right">
                         <span className="inline-flex items-center text-cyber-text group-hover:text-glow">
                           DETAILS <ChevronRight className="h-4.5 w-4.5 ml-1 transition-transform group-hover:translate-x-0.5" />

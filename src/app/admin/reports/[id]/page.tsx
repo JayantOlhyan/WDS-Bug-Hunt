@@ -154,7 +154,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
       
       {/* Back button */}
       <div>
-        <Link href="/admin" className="inline-flex items-center space-x-1.5 text-cyber-subtext hover:text-cyber-text transition-colors">
+        <Link href="/admin" className="inline-flex items-center space-x-1.5 text-cyber-subtext hover:text-cyber-text transition-colors py-2 min-h-[44px]">
           <ArrowLeft className="h-4 w-4" />
           <span>BACK TO QUEUE</span>
         </Link>
@@ -253,7 +253,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   name="status" 
                   value={form.status} 
                   onChange={handleFormChange}
-                  className="w-full bg-cyber-card border border-cyber-darkborder p-2 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+                  className="w-full bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 >
                   <option value="NEW">NEW</option>
                   <option value="UNDER REVIEW">UNDER REVIEW</option>
@@ -275,7 +275,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   name="officialSeverity" 
                   value={form.officialSeverity} 
                   onChange={handleFormChange}
-                  className="w-full bg-cyber-card border border-cyber-darkborder p-2 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+                  className="w-full bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 >
                   <option value="Minor">Minor</option>
                   <option value="Moderate">Moderate</option>
@@ -292,13 +292,13 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   name="points" 
                   value={form.points} 
                   onChange={handleFormChange}
-                  className="w-full bg-cyber-card border border-cyber-darkborder p-2 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+                  className="w-full bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 />
               </div>
 
               {/* Flags */}
               <div className="space-y-2 pt-2 border-t border-cyber-darkborder/20">
-                <label className="flex items-center space-x-2 cursor-pointer hover:text-cyber-text text-cyber-subtext">
+                <label className="flex items-center space-x-2 cursor-pointer hover:text-cyber-text text-cyber-subtext min-h-[44px]">
                   <input 
                     type="checkbox" 
                     name="duplicate" 
@@ -309,7 +309,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   <span>Mark as Duplicate Report</span>
                 </label>
 
-                <label className="flex items-center space-x-2 cursor-pointer hover:text-cyber-text text-cyber-subtext">
+                <label className="flex items-center space-x-2 cursor-pointer hover:text-cyber-text text-cyber-subtext min-h-[44px]">
                   <input 
                     type="checkbox" 
                     name="firstReport" 
@@ -320,7 +320,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   <span>First Valid Report (+10 pts bonus)</span>
                 </label>
 
-                <label className="flex items-center space-x-2 cursor-pointer hover:text-cyber-text text-cyber-subtext">
+                <label className="flex items-center space-x-2 cursor-pointer hover:text-cyber-text text-cyber-subtext min-h-[44px]">
                   <input 
                     type="checkbox" 
                     name="fixed" 
@@ -341,7 +341,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
                   onChange={handleFormChange}
                   placeholder="Notes visible only to admin reviewers..." 
                   rows={3}
-                  className="w-full bg-cyber-card border border-cyber-darkborder p-2 text-cyber-text text-xs font-mono focus:outline-none focus:border-cyber-border"
+                  className="w-full bg-cyber-card border border-cyber-darkborder p-3 min-h-[120px] text-cyber-text text-xs font-mono focus:outline-none focus:border-cyber-border"
                 />
               </div>
 
@@ -356,7 +356,7 @@ export default function AdminReportReview({ params }: { params: { id: string } }
               <TerminalButton 
                 type="submit" 
                 variant="primary" 
-                className="w-full flex items-center justify-center space-x-2"
+                className="w-full py-4 min-h-[48px] flex items-center justify-center space-x-2"
                 disabled={isUpdating}
               >
                 {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}

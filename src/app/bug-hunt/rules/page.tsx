@@ -108,9 +108,9 @@ export default function RulesPage() {
         </div>
       </Card>
 
-      <div className="flex justify-center pt-2">
-        <Link href="/bug-hunt/report">
-          <TerminalButton variant="primary" className="px-8 py-3 text-sm">
+      <div className="flex flex-col sm:flex-row justify-center pt-2 w-full">
+        <Link href="/bug-hunt/report" className="w-full sm:w-auto">
+          <TerminalButton variant="primary" className="w-full sm:w-auto px-8 py-4 text-sm flex justify-center">
             I AGREE - START HUNTING
           </TerminalButton>
         </Link>

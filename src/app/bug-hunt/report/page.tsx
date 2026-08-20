@@ -236,7 +236,7 @@ export default function BugReportForm() {
                 value={details.name} 
                 onChange={handleDetailsChange}
                 placeholder="Enter your name" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required 
               />
             </div>
@@ -249,7 +249,7 @@ export default function BugReportForm() {
                 value={details.enrollmentNumber} 
                 onChange={handleDetailsChange}
                 placeholder="Enter enrollment number" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required 
               />
             </div>
@@ -260,7 +260,7 @@ export default function BugReportForm() {
                 name="branch" 
                 value={details.branch} 
                 onChange={handleDetailsChange}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required
               >
                 <option value="">Select branch</option>
@@ -279,7 +279,7 @@ export default function BugReportForm() {
                 name="section" 
                 value={details.section} 
                 onChange={handleDetailsChange}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required
               >
                 <option value="">Select section</option>
@@ -298,7 +298,7 @@ export default function BugReportForm() {
                 value={details.email} 
                 onChange={handleDetailsChange}
                 placeholder="Enter college email" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required 
               />
             </div>
@@ -311,7 +311,7 @@ export default function BugReportForm() {
                 value={details.github} 
                 onChange={handleDetailsChange}
                 placeholder="https://github.com/username" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
               />
             </div>
             <div className="space-y-1">
@@ -323,7 +323,7 @@ export default function BugReportForm() {
                 value={details.linkedin} 
                 onChange={handleDetailsChange}
                 placeholder="https://linkedin.com/in/username" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
               />
             </div>
             <div className="space-y-1 sm:col-span-2 pt-2 border-t border-cyber-darkborder/30">
@@ -366,7 +366,7 @@ export default function BugReportForm() {
                 name="pageCategory" 
                 value={bug.pageCategory} 
                 onChange={handleBugChange}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required
               >
                 <option value="">Select page category</option>
@@ -394,7 +394,7 @@ export default function BugReportForm() {
                 value={bug.pageUrl} 
                 onChange={handleBugChange}
                 placeholder="https://msit.ac.in/..." 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-cyber-text text-xs"
                 required 
               />
             </div>
@@ -413,7 +413,7 @@ export default function BugReportForm() {
                 onChange={handleBugChange}
                 placeholder="Describe the issue in detail..." 
                 rows={3}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs font-mono"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
                 required 
               />
             </div>
@@ -427,7 +427,7 @@ export default function BugReportForm() {
                 onChange={handleBugChange}
                 placeholder="What was the expected behaviour?" 
                 rows={2}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs font-mono"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
                 required 
               />
             </div>
@@ -441,7 +441,7 @@ export default function BugReportForm() {
                 onChange={handleBugChange}
                 placeholder="What actually occurred when you tested it?" 
                 rows={2}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs font-mono"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
                 required 
               />
             </div>
@@ -455,7 +455,7 @@ export default function BugReportForm() {
                 onChange={handleBugChange}
                 placeholder="Step-by-step instructions (e.g. 1. Go to page... 2. Click button...)" 
                 rows={3}
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs font-mono"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
                 required 
               />
             </div>
@@ -529,7 +529,7 @@ export default function BugReportForm() {
                     onChange={handleBugChange}
                     placeholder="Describe your suggested solution or share code changes..." 
                     rows={4}
-                    className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2 text-cyber-text text-xs font-mono"
+                    className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[120px] text-cyber-text text-xs font-mono"
                   />
                 )}
               </div>
@@ -542,7 +542,7 @@ export default function BugReportForm() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 font-mono text-xs text-cyber-subtext">
             <div className="flex flex-wrap gap-4">
               {['Minor', 'Moderate', 'Major', 'Critical', 'Not sure'].map((sev) => (
-                <label key={sev} className="flex items-center space-x-1.5 cursor-pointer hover:text-cyber-text">
+                <label key={sev} className="flex items-center space-x-1.5 cursor-pointer hover:text-cyber-text min-h-[44px]">
                   <input 
                     type="radio" 
                     name="studentSeverity" 
@@ -559,7 +559,7 @@ export default function BugReportForm() {
             <TerminalButton 
               type="submit" 
               variant="primary" 
-              className="w-full sm:w-auto px-8 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-8 py-4 min-h-[48px] flex items-center justify-center space-x-2"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

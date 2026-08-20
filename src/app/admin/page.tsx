@@ -137,7 +137,7 @@ export default function AdminDashboard() {
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 placeholder="••••••" 
-                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-2.5 text-center text-cyber-text text-sm tracking-[6px]"
+                className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none p-3 min-h-[48px] text-center text-cyber-text text-sm tracking-[6px]"
                 required
                 autoFocus
               />
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
               <p className="text-[10px] text-cyber-red font-bold uppercase text-glow-red text-center">{authError}</p>
             )}
 
-            <TerminalButton type="submit" variant="primary" className="w-full flex items-center justify-center space-x-2" disabled={isVerifying}>
+            <TerminalButton type="submit" variant="primary" className="w-full py-4 min-h-[48px] flex items-center justify-center space-x-2" disabled={isVerifying}>
               {isVerifying ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               <span>AUTHENTICATE</span>
             </TerminalButton>
@@ -177,11 +177,11 @@ export default function AdminDashboard() {
             variant="secondary" 
             onClick={() => fetchReports(true)}
             disabled={isRefreshing}
-            className="p-2"
+            className="p-3 min-h-[48px]"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </TerminalButton>
-          <TerminalButton variant="danger" onClick={handleLogout} className="text-xs">
+          <TerminalButton variant="danger" onClick={handleLogout} className="text-xs px-4 py-3 min-h-[48px]">
             DE-AUTH
           </TerminalButton>
         </div>
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
                     else if (item.name === 'VALID REPORTS') setStatusFilter('VALID');
                     else if (item.name === 'DUPLICATES') setStatusFilter('DUPLICATE');
                   }}
-                  className={`w-full flex items-center justify-between p-2 border-b border-cyber-darkborder/20 text-left hover:text-cyber-text hover:bg-white/5 transition-all ${
+                  className={`w-full flex items-center justify-between p-4 min-h-[48px] border-b border-cyber-darkborder/20 text-left hover:text-cyber-text hover:bg-white/5 transition-all ${
                     item.active ? 'text-cyber-text font-bold bg-cyber-card border border-cyber-darkborder' : 'text-cyber-subtext'
                   }`}
                 >
@@ -260,14 +260,14 @@ export default function AdminDashboard() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search Report ID or Student..."
-                    className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none pl-8 p-1.5 text-cyber-text text-xs"
+                    className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none pl-8 p-3 min-h-[48px] text-cyber-text text-xs"
                   />
                 </div>
                 {/* Status Filter */}
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="bg-cyber-card border border-cyber-darkborder p-1.5 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+                  className="bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 >
                   <option value="ALL">ALL STATUSES</option>
                   <option value="NEW">NEW</option>
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
                 <select
                   value={severityFilter}
                   onChange={(e) => setSeverityFilter(e.target.value)}
-                  className="bg-cyber-card border border-cyber-darkborder p-1.5 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+                  className="bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 >
                   <option value="ALL">ALL SEVERITIES</option>
                   <option value="Minor">MINOR</option>
@@ -293,7 +293,7 @@ export default function AdminDashboard() {
                 <select
                   value={pageFilter}
                   onChange={(e) => setPageFilter(e.target.value)}
-                  className="bg-cyber-card border border-cyber-darkborder p-1.5 text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
+                  className="bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 >
                   <option value="ALL">ALL PAGES</option>
                   <option value="Home">Home</option>
@@ -310,11 +310,11 @@ export default function AdminDashboard() {
                 <table className="w-full text-left font-mono">
                   <thead>
                     <tr className="border-b border-cyber-darkborder bg-cyber-card text-cyber-text">
-                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider">ID</th>
+                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider w-12 sm:w-16">ID</th>
                       <th className="p-3 text-[10px] uppercase font-bold tracking-wider">STUDENT</th>
-                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider">PAGE</th>
-                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider">SEVERITY (EST.)</th>
-                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider">SUBMITTED</th>
+                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">PAGE</th>
+                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">SEVERITY (EST.)</th>
+                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">SUBMITTED</th>
                       <th className="p-3 text-[10px] uppercase font-bold tracking-wider text-right">ACTION</th>
                     </tr>
                   </thead>
@@ -330,17 +330,17 @@ export default function AdminDashboard() {
                         <tr key={report.id} className="hover:bg-white/5 transition-colors group">
                           <td className="p-3 font-bold text-cyber-text">{report.id}</td>
                           <td className="p-3 font-bold text-cyber-text">{report.studentName}</td>
-                          <td className="p-3 text-cyber-subtext">{report.pageCategory}</td>
-                          <td className="p-3">
+                          <td className="p-3 text-cyber-subtext hidden sm:table-cell">{report.pageCategory}</td>
+                          <td className="p-3 hidden sm:table-cell">
                             <span className="text-cyber-yellow">{report.studentSeverity || 'Minor'}</span>
                           </td>
-                          <td className="p-3 text-cyber-subtext">
+                          <td className="p-3 text-cyber-subtext hidden sm:table-cell">
                             {new Date(report.submittedAt).toLocaleDateString()}
                           </td>
                           <td className="p-3 text-right">
                             <button
                               onClick={() => router.push(`/admin/reports/${report.id}`)}
-                              className="border border-cyber-border text-cyber-text hover:bg-cyber-border hover:text-black font-bold uppercase transition-all px-2 py-1 text-[10px]"
+                              className="border border-cyber-border text-cyber-text hover:bg-cyber-border hover:text-black font-bold uppercase transition-all px-3 py-2 sm:px-2 sm:py-1 text-[10px] min-h-[44px]"
                             >
                               Review &gt;
                             </button>

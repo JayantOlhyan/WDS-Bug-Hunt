@@ -137,7 +137,7 @@ export default function BugHuntLanding() {
             &gt;_ MSIT WEBSITE BUG HUNT
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-mono font-black uppercase tracking-tight text-cyber-text leading-none select-none text-glow">
+          <h1 className="text-[clamp(42px,12vw,60px)] font-mono font-black uppercase tracking-tight text-cyber-text leading-none select-none text-glow">
             FIND IT.<br/>
             REPORT IT.<br/>
             GET RECOGNIZED.
@@ -147,14 +147,14 @@ export default function BugHuntLanding() {
             Find real issues on the MSIT website. Report them with proof. Earn points. Get recognized by WDS.
           </p>
 
-          <div className="flex flex-wrap gap-4 items-center">
-            <Link href="/bug-hunt/report">
-              <button className="bg-cyber-border border-2 border-cyber-border text-black font-mono font-bold uppercase tracking-wider text-xs py-3 px-6 shadow-cyber-glow flex items-center space-x-1.5 transition-all active:translate-y-0.5 hover:bg-transparent hover:text-cyber-text">
+          <div className="flex flex-col md:flex-row gap-4 items-center w-full">
+            <Link href="/bug-hunt/report" className="w-full md:w-auto">
+              <button className="w-full md:w-auto bg-cyber-border border-2 border-cyber-border text-black font-mono font-bold uppercase tracking-wider text-xs py-4 px-6 shadow-cyber-glow flex items-center justify-center space-x-1.5 transition-all active:translate-y-0.5 hover:bg-transparent hover:text-cyber-text">
                 <span>&gt;_ REPORT A BUG</span>
               </button>
             </Link>
-            <Link href="/bug-hunt/leaderboard">
-              <button className="bg-transparent border-2 border-cyber-border text-cyber-text font-mono font-bold uppercase tracking-wider text-xs py-3 px-6 transition-all active:translate-y-0.5 hover:bg-cyber-border hover:text-black">
+            <Link href="/bug-hunt/leaderboard" className="w-full md:w-auto">
+              <button className="w-full md:w-auto bg-transparent border-2 border-cyber-border text-cyber-text font-mono font-bold uppercase tracking-wider text-xs py-4 px-6 flex items-center justify-center transition-all active:translate-y-0.5 hover:bg-cyber-border hover:text-black">
                 <span>&gt;_ VIEW LEADERBOARD</span>
               </button>
             </Link>
@@ -259,7 +259,7 @@ export default function BugHuntLanding() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
           {[
             { step: '01', title: 'FIND', icon: Search, desc: 'Explore the MSIT website and look for something broken, missing or incorrect.' },
             { step: '02', title: 'REPORT', icon: FileText, desc: 'Submit the issue with its URL, explanation and screenshot.' },
@@ -286,7 +286,7 @@ export default function BugHuntLanding() {
                   </Card>
                   {/* Divider arrow on desktop */}
                   {idx < 3 && (
-                    <span className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-cyber-border font-bold text-sm z-20">
+                    <span className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 text-cyber-border font-bold text-sm z-20">
                       &gt;
                     </span>
                   )}
@@ -303,7 +303,7 @@ export default function BugHuntLanding() {
         {/* WHAT CAN YOU FIND? */}
         <Card title="WHAT CAN YOU FIND?">
           <div className="space-y-4 py-1">
-            <div className="grid grid-cols-4 gap-2 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 text-center">
               {[
                 { title: 'BROKEN', icon: LinkIcon, sub: 'Links, buttons, forms, navigation' },
                 { title: 'MISSING', icon: Maximize2, sub: 'Content, images, pages, sections' },
@@ -348,9 +348,9 @@ export default function BugHuntLanding() {
                     <span className={`px-2 py-0.5 border text-[9px] font-bold uppercase select-none ${item.border}`}>
                       {item.name}
                     </span>
-                    <span className="text-[10px] text-cyber-subtext truncate max-w-[150px] sm:max-w-xs">{item.desc}</span>
+                    <span className="text-[10px] text-cyber-subtext break-words w-full">{item.desc}</span>
                   </div>
-                  <span className="font-bold text-cyber-text whitespace-nowrap">{item.pts}</span>
+                  <span className="font-bold text-cyber-text whitespace-nowrap pl-2">{item.pts}</span>
                 </div>
               ))}
             </div>
@@ -392,7 +392,7 @@ export default function BugHuntLanding() {
                 NO STANDINGS LOGGED. START HUNTING!
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {topHunters.map((hunter, idx) => (
                   <div key={hunter.enrollmentNumber} className="border border-cyber-darkborder/40 p-3 bg-black/40 text-center relative flex flex-col items-center">
                     <span className="absolute top-1 left-1 border border-cyber-darkborder bg-black text-[9px] font-bold p-0.5 px-1 inline-block">
@@ -446,7 +446,7 @@ export default function BugHuntLanding() {
 
           <div>
             <Link href="/bug-hunt/report" className="inline-block w-full">
-              <button className="w-full bg-cyber-border border-2 border-cyber-border text-black font-mono font-bold uppercase tracking-wider text-xs py-3 px-6 shadow-cyber-glow transition-all active:translate-y-0.5 hover:bg-transparent hover:text-cyber-text">
+              <button className="w-full bg-cyber-border border-2 border-cyber-border text-black font-mono font-bold uppercase tracking-wider text-xs py-4 px-6 shadow-cyber-glow transition-all active:translate-y-0.5 hover:bg-transparent hover:text-cyber-text">
                 <span>&gt;_ REPORT A BUG NOW</span>
               </button>
             </Link>
