@@ -15,10 +15,10 @@ export default function LeaderboardPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchLeaderboard = async (silent = false) => {
-    if (!silent) setIsLoading(true);
-    else setIsRefreshing(true);
-    setError(null);
+  const fetchLeaderboard = async (mode: 'initial' | 'refresh' | 'poll' = 'initial') => {
+    if (mode === 'initial') setIsLoading(true);
+    else if (mode === 'refresh') setIsRefreshing(true);
+    if (mode !== 'poll') setError(null);
     try {
       // Fetch leaderboard (returns sorted student list)
       const res = await fetch('/api/leaderboard');
@@ -33,7 +33,9 @@ export default function LeaderboardPage() {
         setBadges(badgesData);
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred loading standings.');
+      if (mode !== 'poll') {
+        setError(err.message || 'An error occurred loading standings.');
+      }
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -41,7 +43,14 @@ export default function LeaderboardPage() {
   };
 
   useEffect(() => {
-    fetchLeaderboard();
+    fetchLeaderboard('initial');
+
+    // Automatically update standings every 10 seconds
+    const intervalId = setInterval(() => {
+      fetchLeaderboard('poll');
+    }, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   // Format student name to mask private data (e.g. Jayant M.)
@@ -125,7 +134,7 @@ export default function LeaderboardPage() {
         </div>
         
         <button 
-          onClick={() => fetchLeaderboard(true)} 
+          onClick={() => fetchLeaderboard('refresh')} 
           disabled={isRefreshing}
           className="border border-cyber-darkborder p-2 text-cyber-subtext hover:text-cyber-text transition-colors"
           title="Refresh rankings"
@@ -263,7 +272,7 @@ export default function LeaderboardPage() {
       </Card>
 
       <div className="text-[10px] text-cyber-subtext text-center italic">
-        * Rankings automatically update every 10 minutes. Ties resolved by: 1. Resolved Bugs, 2. Valid Bugs, 3. Earliest report log.
+        * Rankings automatically update every 10 seconds. Ties resolved by: 1. Resolved Bugs, 2. Valid Bugs, 3. Earliest report log.
       </div>
 
     </div>

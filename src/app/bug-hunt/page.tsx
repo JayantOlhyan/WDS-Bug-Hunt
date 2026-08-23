@@ -137,6 +137,14 @@ export default function BugHuntLanding() {
 
     fetchTop();
     fetchStats();
+
+    // Automatically update stats and top hunters every 10 seconds
+    const intervalId = setInterval(() => {
+      fetchTop();
+      fetchStats();
+    }, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const formatStudentName = (fullName: string) => {
