@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { dataService } from '@/services/dataService';
+import { db } from '@/services/db';
 
 export const dynamic = 'force-dynamic';
 
 
 export async function GET() {
   try {
-    const badges = await dataService.getBadges();
+    const badges = await db.getBadges();
     return NextResponse.json(badges);
   } catch (error: any) {
     console.error('API Error fetching badges definitions:', error);

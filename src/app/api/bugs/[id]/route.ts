@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { dataService } from '@/services/dataService';
+import { db } from '@/services/db';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const bug = await dataService.getBug(params.id);
+    const bug = await db.getBug(params.id);
     if (!bug) {
       return new NextResponse('Bug report not found', { status: 404 });
     }
@@ -25,7 +25,7 @@ export async function POST(
   try {
     const body = await request.json();
     
-    const updatedBug = await dataService.updateBug(params.id, {
+    const updatedBug = await db.updateBug(params.id, {
       status: body.status,
       officialSeverity: body.officialSeverity,
       points: Number(body.points) || 0,

@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { dataService } from '@/services/dataService';
+import { db } from '@/services/db';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
     const [bugs, students, orientations] = await Promise.all([
-      dataService.getBugs(),
-      dataService.getStudents(),
-      dataService.getOrientations(),
+      db.getBugs(),
+      db.getStudents(),
+      db.getOrientations(),
     ]);
 
     const totalBugs = bugs.length;

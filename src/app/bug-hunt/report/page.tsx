@@ -238,8 +238,10 @@ export default function BugReportForm() {
       <div className="border border-cyber-border bg-cyber-darkborder/20 p-4 font-mono text-xs flex items-start sm:items-center space-x-3 text-cyber-text shadow-cyber-glow">
         <LinkIcon className="h-5 w-5 flex-shrink-0 text-cyber-yellow mt-0.5 sm:mt-0" />
         <div className="space-y-1 w-full">
-          <p className="font-bold uppercase tracking-widest text-cyber-yellow">Target Website</p>
-          <p className="text-cyber-subtext">Find bugs here: <a href="https://msit-website.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-cyber-text hover:text-cyber-yellow transition-colors break-all underline underline-offset-2">https://msit-website.netlify.app/</a></p>
+          <p className="font-bold uppercase tracking-widest text-cyber-yellow">Target Websites</p>
+          <p className="text-cyber-subtext">Find bugs on either:</p>
+          <p className="text-cyber-subtext">1. <a href="https://msit-website.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-cyber-text hover:text-cyber-yellow transition-colors break-all underline underline-offset-2">https://msit-website.netlify.app/</a></p>
+          <p className="text-cyber-subtext">2. <a href="https://web-dev-society.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-cyber-text hover:text-cyber-yellow transition-colors break-all underline underline-offset-2">https://web-dev-society.netlify.app/</a></p>
         </div>
       </div>
 
@@ -441,6 +443,7 @@ export default function BugReportForm() {
                 <option value="Placements">Placements</option>
                 <option value="Student Life">Student Life</option>
                 <option value="Contact">Contact</option>
+                <option value="WDS Website">WDS Website</option>
                 <option value="Other">Other</option>
               </select>
             </div>

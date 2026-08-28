@@ -20,7 +20,7 @@ const STUDENTS_DB_ID = process.env.NOTION_DATABASE_STUDENTS_ID || '';
 const ORIENTATIONS_DB_ID = process.env.NOTION_DATABASE_ORIENTATIONS_ID || '';
 const BADGES_DB_ID = process.env.NOTION_DATABASE_BADGES_ID || '';
 
-export const notionDb = {
+export const db = {
   isEnabled(): boolean {
     return !!process.env.NOTION_TOKEN;
   },

@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { dataService } from '@/services/dataService';
+import { db } from '@/services/db';
 
 export async function GET(
   request: Request,
   { params }: { params: { mobile: string } }
 ) {
   try {
-    const bugs = await dataService.getBugs();
+    const bugs = await db.getBugs();
     const studentBugs = bugs.filter(b => b.studentMobile === params.mobile);
     return NextResponse.json(studentBugs);
   } catch (error: any) {

@@ -178,13 +178,14 @@ export default function BugHuntLanding() {
             Find real issues on the MSIT website. Report them with proof. Earn points. Get recognized by WDS.
           </p>
 
-          <a href="https://msit-website.netlify.app/" target="_blank" rel="noopener noreferrer" className="block max-w-lg border border-cyber-border bg-cyber-darkborder/20 p-4 font-mono text-sm text-cyber-text hover:bg-cyber-darkborder/40 transition-colors shadow-cyber-glow">
-            <div className="flex items-center space-x-2">
+          <div className="block max-w-lg border border-cyber-border bg-cyber-darkborder/20 p-4 font-mono text-sm text-cyber-text shadow-cyber-glow">
+            <div className="flex items-center space-x-2 mb-2">
               <LinkIcon className="w-4 h-4 text-cyber-yellow" />
-              <span className="font-bold uppercase tracking-wider text-cyber-yellow">Target Website:</span>
+              <span className="font-bold uppercase tracking-wider text-cyber-yellow">Target Websites:</span>
             </div>
-            <p className="mt-1 text-cyber-subtext break-all">https://msit-website.netlify.app/</p>
-          </a>
+            <a href="https://msit-website.netlify.app/" target="_blank" rel="noopener noreferrer" className="block mt-1 text-cyber-subtext break-all hover:text-cyber-yellow transition-colors underline underline-offset-2">1. https://msit-website.netlify.app/</a>
+            <a href="https://web-dev-society.netlify.app/" target="_blank" rel="noopener noreferrer" className="block mt-2 text-cyber-subtext break-all hover:text-cyber-yellow transition-colors underline underline-offset-2">2. https://web-dev-society.netlify.app/</a>
+          </div>
 
           <div className="flex flex-col md:flex-row gap-4 items-center w-full">
             <Link href="/bug-hunt/report" className="w-full md:w-auto">

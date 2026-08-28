@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { dataService } from '@/services/dataService';
+import { db } from '@/services/db';
 
 export const dynamic = 'force-dynamic';
 
 
 export async function GET() {
   try {
-    const bugs = await dataService.getBugs();
+    const bugs = await db.getBugs();
     return NextResponse.json(bugs);
   } catch (error: any) {
     console.error('API Error fetching bugs:', error);
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const bugReport = await dataService.createBug({
+    const bugReport = await db.createBug({
       studentMobile: body.mobileNumber,
       avatarEmoji: body.avatarEmoji || '👾',
       studentName: body.name,

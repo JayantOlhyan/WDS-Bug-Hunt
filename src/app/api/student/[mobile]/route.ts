@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { dataService } from '@/services/dataService';
+import { db } from '@/services/db';
 
 export async function GET(
   request: Request,
   { params }: { params: { mobile: string } }
 ) {
   try {
-    const student = await dataService.getStudent(params.mobile);
+    const student = await db.getStudent(params.mobile);
     if (!student) {
       return new NextResponse('Student profile not found', { status: 404 });
     }
