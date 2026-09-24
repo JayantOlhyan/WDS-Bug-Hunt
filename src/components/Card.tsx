@@ -5,13 +5,15 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   headerControls?: boolean;
+  onClose?: () => void;
 }
 
 export const Card: React.FC<CardProps> = ({ 
   title, 
   children, 
   className = '', 
-  headerControls = true 
+  headerControls = true,
+  onClose
 }) => {
   return (
     <div className={`bg-cyber-card border-2 border-cyber-border shadow-cyber-glow flex flex-col relative ${className}`}>
@@ -35,7 +37,12 @@ export const Card: React.FC<CardProps> = ({
             <div className="flex space-x-1.5 text-cyber-subtext text-[10px] font-mono">
               <span className="cursor-pointer hover:text-cyber-text">[MIN]</span>
               <span className="cursor-pointer hover:text-cyber-text">[MAX]</span>
-              <span className="cursor-pointer hover:text-cyber-text">[X]</span>
+              <span 
+                onClick={onClose} 
+                className={`cursor-pointer hover:text-cyber-text ${onClose ? 'hover:text-cyber-red font-bold' : ''}`}
+              >
+                [X]
+              </span>
             </div>
           )}
         </div>

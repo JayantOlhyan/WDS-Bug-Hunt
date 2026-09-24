@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/Card';
 import { TerminalButton } from '@/components/TerminalButton';
-import { Loader2, Key, Search, ChevronRight, Filter, LayoutGrid, CheckSquare, Layers, AlertCircle, RefreshCw } from 'lucide-react';
+import { ReportReviewModal } from '@/components/ReportReviewModal';
+import { Loader2, Key, Search, ChevronRight, Filter, LayoutGrid, CheckSquare, Layers, AlertCircle, RefreshCw, CheckCircle2, X } from 'lucide-react';
 import { BugReport } from '@/types';
 
 export default function AdminDashboard() {
@@ -22,11 +23,17 @@ export default function AdminDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  // Filter states
+  // Active Menu / Filter states
+  // Default to 'REVIEW QUEUE' with 'PENDING' status so unsolved reports are shown by default
+  const [activeTab, setActiveTab] = useState('REVIEW QUEUE');
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [statusFilter, setStatusFilter] = useState('PENDING');
   const [severityFilter, setSeverityFilter] = useState('ALL');
   const [pageFilter, setPageFilter] = useState('ALL');
+
+  // Overlay state
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Check cached Admin session on mount
   useEffect(() => {
@@ -87,20 +94,46 @@ export default function AdminDashboard() {
     setPin('');
   };
 
+  // Stat calculations
+  const totalBugs = reports.length;
+  // Pending bugs: unsolved bugs waiting for review
+  const pendingBugs = reports.filter(
+    (r) => (r.status === 'NEW' || r.status === 'UNDER REVIEW' || r.status === 'NEEDS MORE INFORMATION') && !r.fixed
+  ).length;
+  // Reviewed bugs: reports that have undergone verification or resolution
+  const reviewedBugs = reports.filter(
+    (r) => (r.status !== 'NEW' && r.status !== 'UNDER REVIEW' && r.status !== 'NEEDS MORE INFORMATION') || r.fixed
+  ).length;
+  const validBugs = reports.filter((r) => r.status === 'VALID' || r.status === 'FIXED' || r.status === 'VERIFIED').length;
+  const duplicateBugs = reports.filter((r) => r.status === 'DUPLICATE').length;
+  const fixedBugs = reports.filter((r) => r.fixed || r.status === 'FIXED' || r.status === 'VERIFIED').length;
+
   // Filter logic
   const getFilteredReports = () => {
-    return reports.filter(r => {
-      // Search text matches ID or Student Name
-      const matchesSearch = 
-        r.id.toLowerCase().includes(search.toLowerCase()) || 
+    return reports.filter((r) => {
+      // Search text matches ID or Student Name or Mobile
+      const matchesSearch =
+        r.id.toLowerCase().includes(search.toLowerCase()) ||
         r.studentName.toLowerCase().includes(search.toLowerCase()) ||
         r.studentMobile.includes(search);
 
       // Status Match
-      const matchesStatus = statusFilter === 'ALL' || r.status === statusFilter;
+      let matchesStatus = true;
+      if (statusFilter === 'ALL') {
+        matchesStatus = true;
+      } else if (statusFilter === 'PENDING') {
+        // Pending queue: unsolved reports only
+        matchesStatus = (r.status === 'NEW' || r.status === 'UNDER REVIEW' || r.status === 'NEEDS MORE INFORMATION') && !r.fixed;
+      } else if (statusFilter === 'REVIEWED') {
+        // Reviewed reports only
+        matchesStatus = (r.status !== 'NEW' && r.status !== 'UNDER REVIEW' && r.status !== 'NEEDS MORE INFORMATION') || r.fixed;
+      } else {
+        matchesStatus = r.status === statusFilter;
+      }
 
       // Severity Match
-      const matchesSeverity = severityFilter === 'ALL' || r.studentSeverity === severityFilter || r.officialSeverity === severityFilter;
+      const matchesSeverity =
+        severityFilter === 'ALL' || r.studentSeverity === severityFilter || r.officialSeverity === severityFilter;
 
       // Page category Match
       const matchesPage = pageFilter === 'ALL' || r.pageCategory === pageFilter;
@@ -109,14 +142,29 @@ export default function AdminDashboard() {
     });
   };
 
-  // Stat calculations
-  const totalBugs = reports.length;
-  const pendingBugs = reports.filter(r => r.status === 'NEW' || r.status === 'UNDER REVIEW' || r.status === 'NEEDS MORE INFORMATION').length;
-  const validBugs = reports.filter(r => r.status === 'VALID' || r.status === 'FIXED' || r.status === 'VERIFIED').length;
-  const duplicateBugs = reports.filter(r => r.status === 'DUPLICATE').length;
-  const fixedBugs = reports.filter(r => r.fixed || r.status === 'FIXED' || r.status === 'VERIFIED').length;
+  // Callback when a report is updated in the review overlay
+  const handleReportUpdated = (updatedBug: BugReport) => {
+    setReports((prev) => prev.map((r) => (r.id === updatedBug.id ? updatedBug : r)));
+    setToastMessage(`REPORT [${updatedBug.id}] UPDATED TO ${updatedBug.status} (${updatedBug.points} PTS)`);
+    setTimeout(() => setToastMessage(null), 5000);
+    // Silently sync with backend
+    fetchReports(true);
+  };
 
-  // PIN Access overlay
+  const statusBadgeClasses: Record<string, string> = {
+    'NEW': 'border-cyber-subtext text-cyber-subtext bg-cyber-subtext/10',
+    'UNDER REVIEW': 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10 text-glow',
+    'VALID': 'border-cyber-green text-cyber-green bg-cyber-green/10 text-glow-green',
+    'INVALID': 'border-cyber-red/60 text-cyber-red/70 bg-cyber-red/10',
+    'DUPLICATE': 'border-cyber-red text-cyber-red bg-cyber-red/20 text-glow-red',
+    'FIXED': 'border-cyber-green text-cyber-green bg-cyber-green/20 text-glow-green font-bold',
+    'VERIFIED': 'border-cyber-green text-cyber-green bg-cyber-green/20 text-glow-green font-bold',
+    'NEEDS MORE INFORMATION': 'border-cyber-yellow/80 text-cyber-yellow/90 bg-cyber-yellow/10',
+    'PRIORITIZED': 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10',
+    'IN PROGRESS': 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10',
+  };
+
+  // PIN Access gate
   if (!isAdmin) {
     return (
       <div className="max-w-md mx-auto py-16">
@@ -159,9 +207,35 @@ export default function AdminDashboard() {
 
   const filteredReports = getFilteredReports();
 
+  const menuItems = [
+    { name: 'REVIEW QUEUE', count: pendingBugs, filterValue: 'PENDING' },
+    { name: 'REVIEWED', count: reviewedBugs, filterValue: 'REVIEWED' },
+    { name: 'ALL REPORTS', count: totalBugs, filterValue: 'ALL' },
+    { name: 'VALID REPORTS', count: validBugs, filterValue: 'VALID' },
+    { name: 'DUPLICATES', count: duplicateBugs, filterValue: 'DUPLICATE' },
+    { name: 'SETTINGS', count: null, filterValue: null },
+  ];
+
   return (
     <div className="space-y-8 font-mono text-xs">
       
+      {/* Toast Notification Banner */}
+      {toastMessage && (
+        <div className="bg-cyber-card border-2 border-cyber-green p-3 shadow-cyber-glow-green text-cyber-green font-bold flex items-center justify-between animate-in slide-in-from-top duration-300">
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0 animate-pulse" />
+            <span>&gt;_ {toastMessage}</span>
+          </div>
+          <button 
+            onClick={() => setToastMessage(null)}
+            className="text-cyber-green hover:underline text-[10px] flex items-center space-x-1"
+          >
+            <span>[DISMISS]</span>
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      )}
+
       {/* Admin Header */}
       <div className="flex items-center justify-between border-b border-cyber-darkborder pb-4">
         <div className="space-y-1">
@@ -178,6 +252,7 @@ export default function AdminDashboard() {
             onClick={() => fetchReports(true)}
             disabled={isRefreshing}
             className="p-3 min-h-[48px]"
+            title="Refresh database records"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </TerminalButton>
@@ -212,40 +287,43 @@ export default function AdminDashboard() {
         <div className="lg:col-span-3">
           <Card title="MENU" headerControls={false}>
             <div className="space-y-1 py-1 font-mono text-xs">
-              {[
-                { name: 'REVIEW QUEUE', count: pendingBugs, active: true },
-                { name: 'ALL REPORTS', count: totalBugs, active: false },
-                { name: 'VALID REPORTS', count: validBugs, active: false },
-                { name: 'DUPLICATES', count: duplicateBugs, active: false },
-                { name: 'SETTINGS', count: null, active: false }
-              ].map((item, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    if (item.name === 'REVIEW QUEUE') setStatusFilter('NEW');
-                    else if (item.name === 'ALL REPORTS') setStatusFilter('ALL');
-                    else if (item.name === 'VALID REPORTS') setStatusFilter('VALID');
-                    else if (item.name === 'DUPLICATES') setStatusFilter('DUPLICATE');
-                  }}
-                  className={`w-full flex items-center justify-between p-4 min-h-[48px] border-b border-cyber-darkborder/20 text-left hover:text-cyber-text hover:bg-white/5 transition-all ${
-                    item.active ? 'text-cyber-text font-bold bg-cyber-card border border-cyber-darkborder' : 'text-cyber-subtext'
-                  }`}
-                >
-                  <span>&gt; {item.name}</span>
-                  {item.count !== null && (
-                    <span className="px-1.5 py-0.5 bg-black border border-cyber-darkborder text-[9px] text-cyber-text">
-                      {item.count}
-                    </span>
-                  )}
-                </button>
-              ))}
+              {menuItems.map((item, idx) => {
+                const isActive = activeTab === item.name;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      if (item.filterValue !== null) {
+                        setActiveTab(item.name);
+                        setStatusFilter(item.filterValue);
+                      }
+                    }}
+                    className={`w-full flex items-center justify-between p-4 min-h-[48px] border-b border-cyber-darkborder/20 text-left hover:text-cyber-text hover:bg-white/5 transition-all ${
+                      isActive 
+                        ? 'text-cyber-text font-bold bg-cyber-card border border-cyber-border shadow-cyber-glow' 
+                        : 'text-cyber-subtext'
+                    }`}
+                  >
+                    <span>&gt; {item.name}</span>
+                    {item.count !== null && (
+                      <span className={`px-1.5 py-0.5 border text-[9px] ${
+                        isActive 
+                          ? 'bg-cyber-text text-black border-cyber-text font-bold' 
+                          : 'bg-black border-cyber-darkborder text-cyber-text'
+                      }`}>
+                        {item.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </Card>
         </div>
 
         {/* Queue Table Pane */}
         <div className="lg:col-span-9 space-y-4">
-          <Card title="SUBMISSIONS_QUEUE">
+          <Card title={`SUBMISSIONS_QUEUE // [${activeTab || statusFilter}: ${filteredReports.length}]`}>
             <div className="space-y-4">
               
               {/* Filter controls */}
@@ -263,20 +341,35 @@ export default function AdminDashboard() {
                     className="w-full bg-cyber-card border border-cyber-darkborder focus:border-cyber-border focus:outline-none pl-8 p-3 min-h-[48px] text-cyber-text text-xs"
                   />
                 </div>
+
                 {/* Status Filter */}
                 <select
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setStatusFilter(val);
+                    if (val === 'PENDING') setActiveTab('REVIEW QUEUE');
+                    else if (val === 'REVIEWED') setActiveTab('REVIEWED');
+                    else if (val === 'ALL') setActiveTab('ALL REPORTS');
+                    else if (val === 'VALID') setActiveTab('VALID REPORTS');
+                    else if (val === 'DUPLICATE') setActiveTab('DUPLICATES');
+                    else setActiveTab('');
+                  }}
                   className="bg-cyber-card border border-cyber-darkborder p-3 min-h-[48px] text-cyber-text text-xs focus:outline-none focus:border-cyber-border"
                 >
+                  <option value="PENDING">PENDING REVIEW (UNSOLVED)</option>
+                  <option value="REVIEWED">REVIEWED ONLY</option>
                   <option value="ALL">ALL STATUSES</option>
                   <option value="NEW">NEW</option>
                   <option value="UNDER REVIEW">UNDER REVIEW</option>
                   <option value="VALID">VALID</option>
                   <option value="INVALID">INVALID</option>
                   <option value="DUPLICATE">DUPLICATE</option>
+                  <option value="NEEDS MORE INFORMATION">NEEDS MORE INFO</option>
                   <option value="FIXED">FIXED</option>
+                  <option value="VERIFIED">VERIFIED</option>
                 </select>
+
                 {/* Severity Filter */}
                 <select
                   value={severityFilter}
@@ -289,6 +382,7 @@ export default function AdminDashboard() {
                   <option value="Major">MAJOR</option>
                   <option value="Critical">CRITICAL</option>
                 </select>
+
                 {/* Page Filter */}
                 <select
                   value={pageFilter}
@@ -314,32 +408,50 @@ export default function AdminDashboard() {
                       <th className="p-3 text-[10px] uppercase font-bold tracking-wider">STUDENT</th>
                       <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">PAGE</th>
                       <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">SEVERITY (EST.)</th>
-                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden sm:table-cell">SUBMITTED</th>
+                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider">STATUS</th>
+                      <th className="p-3 text-[10px] uppercase font-bold tracking-wider hidden md:table-cell">SUBMITTED</th>
                       <th className="p-3 text-[10px] uppercase font-bold tracking-wider text-right">ACTION</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-cyber-darkborder/30">
                     {filteredReports.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="p-6 text-center text-cyber-subtext uppercase text-[10px]">
-                          Queue is clean. No records found.
+                        <td colSpan={7} className="p-6 text-center text-cyber-subtext uppercase text-[10px]">
+                          Queue is clean. No records found for active filter.
                         </td>
                       </tr>
                     ) : (
                       filteredReports.map((report) => (
-                        <tr key={report.id} className="hover:bg-white/5 transition-colors group">
+                        <tr 
+                          key={report.id} 
+                          onClick={() => setSelectedReportId(report.id)}
+                          className="hover:bg-white/5 transition-colors group cursor-pointer"
+                        >
                           <td className="p-3 font-bold text-cyber-text">{report.id}</td>
-                          <td className="p-3 font-bold text-cyber-text"><span className="mr-2">{report.avatarEmoji || '👾'}</span>{report.studentName}</td>
+                          <td className="p-3 font-bold text-cyber-text">
+                            <span className="mr-2">{report.avatarEmoji || '👾'}</span>
+                            {report.studentName}
+                          </td>
                           <td className="p-3 text-cyber-subtext hidden sm:table-cell">{report.pageCategory}</td>
                           <td className="p-3 hidden sm:table-cell">
                             <span className="text-cyber-yellow">{report.studentSeverity || 'Minor'}</span>
                           </td>
-                          <td className="p-3 text-cyber-subtext hidden sm:table-cell">
+                          <td className="p-3">
+                            <span className={`inline-block px-1.5 py-0.5 text-[9px] uppercase font-bold border ${
+                              statusBadgeClasses[report.status] || 'border-cyber-darkborder text-cyber-subtext'
+                            }`}>
+                              {report.status}
+                            </span>
+                          </td>
+                          <td className="p-3 text-cyber-subtext hidden md:table-cell">
                             {new Date(report.submittedAt).toLocaleDateString()}
                           </td>
                           <td className="p-3 text-right">
                             <button
-                              onClick={() => router.push(`/admin/reports/${report.id}`)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedReportId(report.id);
+                              }}
                               className="border border-cyber-border text-cyber-text hover:bg-cyber-border hover:text-black font-bold uppercase transition-all px-3 py-2 sm:px-2 sm:py-1 text-[10px] min-h-[44px]"
                             >
                               Review &gt;
@@ -357,6 +469,16 @@ export default function AdminDashboard() {
         </div>
 
       </div>
+
+      {/* Review Overlay Modal */}
+      <ReportReviewModal
+        isOpen={!!selectedReportId}
+        reportId={selectedReportId}
+        reportsList={filteredReports}
+        onClose={() => setSelectedReportId(null)}
+        onSelectReport={(id) => setSelectedReportId(id)}
+        onUpdated={handleReportUpdated}
+      />
 
     </div>
   );

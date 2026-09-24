@@ -104,7 +104,8 @@ export default function AdminReportReview({ params }: { params: { id: string } }
       const data = await res.json();
       setReport(data);
       setUpdateSuccess(true);
-      setTimeout(() => setUpdateSuccess(false), 3000);
+      // Immediately return to the main screen
+      router.push('/admin');
     } catch (err: any) {
       alert(err.message || 'Update failed.');
     } finally {
