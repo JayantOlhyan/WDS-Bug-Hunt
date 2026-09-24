@@ -119,7 +119,7 @@ export const ReportReviewModal: React.FC<ReportReviewModalProps> = ({
     };
 
     fetchLatest();
-  }, [reportId, isOpen]);
+  }, [reportId, isOpen, reportsList]);
 
   if (!isOpen || !reportId) return null;
 
@@ -204,7 +204,7 @@ export const ReportReviewModal: React.FC<ReportReviewModalProps> = ({
               <span>BACK TO QUEUE</span>
             </button>
             <span className="text-[11px] text-cyber-subtext hidden md:inline">
-              // OVERLAY ACTIVE
+              {'// OVERLAY ACTIVE'}
             </span>
           </div>
 
